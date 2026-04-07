@@ -21,7 +21,6 @@ const FontStyle = () => (
       animation: gradient-x 3s linear infinite;
     }
 
-    /* --- ESTILOS DO BOTÃO SHINY (ORÇAMENTOS) --- */
     :root {
       --shiny-cta-bg: #000000;
       --shiny-cta-bg-subtle: #1a1818;
@@ -114,7 +113,6 @@ const FontStyle = () => (
   `}} />
 );
 
-// Dicionário de traduções
 const translations = {
   pt: {
     nav: [
@@ -254,7 +252,6 @@ const translations = {
   }
 };
 
-// Projetos de Exemplo
 const PROJECTS = [
   {
     id: "1vc9ono",
@@ -298,7 +295,6 @@ const PROJECTS = [
   }
 ];
 
-// As exatas 9 imagens dos influenciadores
 const ORBIT_IMAGES = [
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%2011_1x.webp",
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%2012_1x.webp",
@@ -310,10 +306,8 @@ const ORBIT_IMAGES = [
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%208_1x.webp",
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%209_1x.webp",
 ];
-// Imagem Central
 const CENTRAL_IMAGE = "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/unico%20fili.webp?raw=true";
 
-// Componente de Troca de Idioma
 const LanguageToggle = ({ lang, setLang }) => (
   <div className="flex items-center rounded-full border border-white p-1 shadow-2xl pointer-events-auto">
     <button 
@@ -334,11 +328,10 @@ const LanguageToggle = ({ lang, setLang }) => (
 export default function App() {
   const containerRef = useRef(null);
   
-  // Estado do idioma
   const [lang, setLang] = useState('pt');
   const t = translations[lang];
 
-  // Hook para o scroll da primeira sessão - MATEMÁTICA CORRIGIDA AQUI
+  // A MÁGICA COMEÇA AQUI: "end start" obriga a tela a travar e esperar o branco
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -346,7 +339,6 @@ export default function App() {
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
-  // =============== LÓGICA DO SCROLL DA SESSÃO 3 PARA A SESSÃO 4 ===============
   const sec3Ref = useRef(null);
   const { scrollYProgress: sec3Progress } = useScroll({
     target: sec3Ref,
@@ -358,7 +350,6 @@ export default function App() {
   const centralImageScale = useTransform(sec3Progress, [0.75, 0.8], [1, 0]);
   const whiteCircleScale = useTransform(sec3Progress, [0.8, 1], [0, 50]);
   
-  // =============== LÓGICA DE MOUSE PARA O 3D ===============
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -378,15 +369,12 @@ export default function App() {
     mouseX.set(x);
     mouseY.set(y);
   };
-  // =========================================================
 
   return (
-    // overflow-x-hidden protege contra bugs de scroll do navegador
     <div id="home" className="bg-zinc-900 font-sans overflow-x-hidden">
       <FontStyle />
 
-      {/* --- PRIMEIRA DOBRA (HERO) --- */}
-      {/* 200vh GARANTE o tempo do usuário ver a tela ficar branca */}
+      {/* A MÁGICA CONTINUA: 200vh exatos para dar o timing perfeito do scroll */}
       <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
           
@@ -473,14 +461,13 @@ export default function App() {
             </motion.div>
           </motion.div>
 
-          {/* GRID: Transição dos quadrados brancos conectada ao scroll da Hero */}
+          {/* GRID COM Z-INDEX GIGANTE PARA COBRIR TUDO COM BRANCO */}
           <GridOverlay scrollYProgress={scrollYProgress} />
         </div>
       </div>
 
-      {/* --- SEGUNDA DOBRA (PORTFÓLIO) --- */}
-      {/* SEM MARGENS NEGATIVAS. O layout flui naturalmente. */}
-      <section id="portfolio" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
+      {/* O VILÃO MORTO: Removido o '-mt-[100vh]' e ajustado o z-index para 50 para o portfólio nascer DEPOIS dos quadrados brancos */}
+      <section id="portfolio" className="relative z-50 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
           <h2 
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal"
@@ -782,7 +769,6 @@ export default function App() {
 // COMPONENTES AUXILIARES DAS SESSÕES
 // ==========================================
 
-// Componente: Acordeão de Serviços (Layout Expandível com Design Claro e Borda Preta)
 const ServicesAccordion = ({ data }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -881,7 +867,6 @@ const ServicesAccordion = ({ data }) => {
   );
 };
 
-// Componente do Anel 3D de Saturno
 const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) => {
   return (
     <motion.div
@@ -891,7 +876,6 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
       transition={{ duration, repeat: Infinity, ease: "linear" }}
     >
       {images.map((src, i) => {
-        // Cálculo matemático para posicionar na borda do círculo
         const angle = (i / images.length) * 360;
         const rad = angle * (Math.PI / 180);
         const x = Math.cos(rad) * 50; 
@@ -926,14 +910,13 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
   );
 };
 
-// Componente que renderiza a malha de quadrados da transição (Hero -> Portfólio) - MATEMÁTICA CORRIGIDA
+// A MATEMÁTICA CORRETA DA TRANSIÇÃO
 const GridOverlay = ({ scrollYProgress }) => {
   const cols = 20;
   const rows = 15;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Começa a aparecer após 40% do scroll e termina aos 98% garantindo tela 100% branca
       const start = 0.4 + Math.random() * 0.4; 
       const end = Math.min(start + 0.15, 0.98); 
       return { id: i, start, end };
@@ -960,7 +943,6 @@ const Square = ({ scrollYProgress, start, end }) => {
   return <motion.div style={{ opacity, willChange: "opacity" }} className="bg-white w-full h-full scale-[1.05]" />;
 };
 
-// Componente da Navbar Animada
 const SlideTabs = ({ tabs }) => {
   const [position, setPosition] = useState({
     left: 0,
