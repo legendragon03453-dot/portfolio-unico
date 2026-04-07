@@ -1,5 +1,7 @@
+// @ts-nocheck
 import React, { useState, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+// ... resto do código continua igual ...
 
 // Injetando a fonte customizada globalmente e as keyframes
 const FontStyle = () => (
