@@ -1,12 +1,10 @@
 // @ts-nocheck
 import React, { useState, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
-// ... resto do código continua igual ...
 
 // Injetando a fonte customizada globalmente e as keyframes
 const FontStyle = () => (
-  <style dangerouslySetInnerHTML={{
-    __html: `
+  <style dangerouslySetInnerHTML={{__html: `
     @font-face {
       font-family: 'Hypik';
       src: url('https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/hypik.otf') format('opentype');
@@ -103,7 +101,6 @@ const FontStyle = () => (
       animation-play-state: running;
     }
     
-    /* Variante do botão maior para a Hero */
     .shiny-btn.shiny-btn-lg {
       padding: 1rem 3rem;
       font-size: 1rem;
@@ -146,7 +143,7 @@ const translations = {
         id: "01",
         title: "Identidade Visual",
         titleSplit: ["Identidade", "Visual"],
-        desc: "Criamos marcas com propósito e sistemas visuais que conectam profundamente com o seu público desde o primeiro olhar. Uma identidade inesquesse.",
+        desc: "Criamos marcas com propósito e sistemas visuais que conectam profundamente com o seu público desde o primeiro olhar. Uma identidade inesquecível.",
         subs: ["Identidade de Marca", "Direção de Arte", "Direção Criativa", "Manuais de Marca"],
         video: "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/CARD%201.webm"
       },
@@ -319,14 +316,14 @@ const CENTRAL_IMAGE = "https://raw.githubusercontent.com/legendragon03453-dot/FI
 // Componente de Troca de Idioma
 const LanguageToggle = ({ lang, setLang }) => (
   <div className="flex items-center rounded-full border border-white p-1 shadow-2xl pointer-events-auto">
-    <button
-      onClick={() => setLang('pt')}
+    <button 
+      onClick={() => setLang('pt')} 
       className={`px-3 py-1.5 text-[10px] md:text-xs rounded-full transition-colors duration-300 ${lang === 'pt' ? 'bg-white text-black' : 'text-white hover:bg-white/20'}`}
     >
       🇧🇷
     </button>
-    <button
-      onClick={() => setLang('en')}
+    <button 
+      onClick={() => setLang('en')} 
       className={`px-3 py-1.5 text-[10px] md:text-xs rounded-full transition-colors duration-300 ${lang === 'en' ? 'bg-white text-black' : 'text-white hover:bg-white/20'}`}
     >
       🇺🇸
@@ -336,12 +333,12 @@ const LanguageToggle = ({ lang, setLang }) => (
 
 export default function App() {
   const containerRef = useRef(null);
-
+  
   // Estado do idioma
   const [lang, setLang] = useState('pt');
   const t = translations[lang];
 
-  // Hook para o scroll da primeira sessão - CORRIGIDO
+  // Hook para o scroll da primeira sessão - MATEMÁTICA CORRIGIDA AQUI
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -356,12 +353,11 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Mapeamento das transições: Encurtado para uma transição mais rápida e direta
   const sec3TextOpacity = useTransform(sec3Progress, [0, 0.2], [1, 0]);
   const ringsScale = useTransform(sec3Progress, [0.1, 0.8], [1, 0]);
   const centralImageScale = useTransform(sec3Progress, [0.75, 0.8], [1, 0]);
   const whiteCircleScale = useTransform(sec3Progress, [0.8, 1], [0, 50]);
-
+  
   // =============== LÓGICA DE MOUSE PARA O 3D ===============
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -369,7 +365,7 @@ export default function App() {
   const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
-  const rotateX = useTransform(smoothY, [-0.5, 0.5], [55, 85]);
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [55, 85]); 
   const rotateY = useTransform(smoothX, [-0.5, 0.5], [-25, 25]);
 
   const invRotateX = useTransform(rotateX, v => -v);
@@ -385,16 +381,16 @@ export default function App() {
   // =========================================================
 
   return (
-    // CORRIGIDO overflow-clip para overflow-x-hidden
+    // overflow-x-hidden protege contra bugs de scroll do navegador
     <div id="home" className="bg-zinc-900 font-sans overflow-x-hidden">
       <FontStyle />
 
       {/* --- PRIMEIRA DOBRA (HERO) --- */}
-      {/* CORRIGIDO de 250vh para 200vh */}
+      {/* 200vh GARANTE o tempo do usuário ver a tela ficar branca */}
       <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
-
-          <div
+          
+          <div 
             className="absolute inset-0 z-50 w-full h-full pointer-events-none opacity-20 mix-blend-plus-lighter"
             style={{ backgroundImage: "url('https://rtl4013zxp.easybuilder.com.br/wp-content/uploads/2025/06/ruido-animado.gif')" }}
           />
@@ -433,13 +429,13 @@ export default function App() {
 
           <main className="relative z-10 flex-1 flex flex-col items-center justify-center pointer-events-none">
             <div className="flex flex-col items-stretch w-fit -mt-12 sm:-mt-16 md:-mt-24">
-              <h1
+              <h1 
                 className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[13rem] leading-normal p-4 md:p-10 overflow-visible whitespace-nowrap tracking-wider text-white opacity-90 text-center"
                 style={{ fontFamily: "'Hypik', sans-serif" }}
               >
                 &nbsp;UNICO&nbsp;
               </h1>
-
+              
               <div className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-16 w-full -mt-[30px] sm:-mt-[50px] md:-mt-[90px] lg:-mt-[120px] text-[8px] sm:text-[10px] md:text-sm lg:text-base tracking-[0.2em] text-white/80 uppercase font-light">
                 <span>{t.heroSub1}</span>
                 <span>{t.heroSub2}</span>
@@ -447,7 +443,7 @@ export default function App() {
               </div>
 
               <div className="flex justify-center mt-10 sm:mt-12 md:mt-16 pointer-events-auto">
-                <button
+                <button 
                   onClick={() => document.querySelector('#orcamento')?.scrollIntoView({ behavior: 'smooth' })}
                   className="shiny-btn shiny-btn-lg"
                 >
@@ -463,7 +459,7 @@ export default function App() {
             </p>
           </div>
 
-          <motion.div
+          <motion.div 
             style={{ opacity: indicatorOpacity }}
             className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
           >
@@ -472,20 +468,21 @@ export default function App() {
             </span>
             <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50">
-                <path d="M12 5v14M19 12l-7 7-7-7" />
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
               </svg>
             </motion.div>
           </motion.div>
 
+          {/* GRID: Transição dos quadrados brancos conectada ao scroll da Hero */}
           <GridOverlay scrollYProgress={scrollYProgress} />
         </div>
       </div>
 
       {/* --- SEGUNDA DOBRA (PORTFÓLIO) --- */}
-      {/* CORRIGIDO a margem negativa que quebrava o layout e o z-index */}
-      <section id="portfolio" className="relative z-50 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
+      {/* SEM MARGENS NEGATIVAS. O layout flui naturalmente. */}
+      <section id="portfolio" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
-          <h2
+          <h2 
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
           >
@@ -498,19 +495,19 @@ export default function App() {
 
         <div className="w-full px-4 sm:px-[20px] md:px-10 mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {PROJECTS.map((project) => (
-            <a
-              key={project.id}
-              href={project.link}
+            <a 
+              key={project.id} 
+              href={project.link} 
               className="relative block w-full rounded-[10px] overflow-hidden aspect-video group cursor-pointer transition-transform duration-500 hover:scale-[1.02] shadow-sm hover:shadow-xl"
             >
-              <video
-                src={project.video}
+              <video 
+                src={project.video} 
                 poster={project.poster}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover z-0 scale-105 group-hover:scale-100 transition-transform duration-700 ease-out"
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                className="absolute inset-0 w-full h-full object-cover z-0 scale-105 group-hover:scale-100 transition-transform duration-700 ease-out" 
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/30 z-10 transition-opacity duration-500 group-hover:opacity-80" />
               <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
@@ -519,7 +516,7 @@ export default function App() {
                 </div>
               </div>
               <div className="absolute top-4 left-4 md:top-6 md:left-6 z-20 flex flex-col gap-3">
-                <h5
+                <h5 
                   className="text-white text-lg sm:text-xl md:text-2xl tracking-wide drop-shadow-md"
                   style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
                 >
@@ -552,61 +549,61 @@ export default function App() {
 
       {/* --- TERCEIRA DOBRA (ÓRBITA 3D E TRANSIÇÃO) --- */}
       <section id="influencers" ref={sec3Ref} className="relative w-full h-[150vh]">
-        <div
+        <div 
           className="sticky top-0 left-0 w-full h-screen bg-zinc-950 overflow-hidden"
           onMouseMove={handleMouseMove}
           style={{ perspective: "1500px" }}
         >
           {/* Texto Absoluto no Topo */}
-          <motion.div
+          <motion.div 
             style={{ opacity: sec3TextOpacity }}
             className="absolute top-16 sm:top-20 md:top-24 left-0 right-0 z-30 text-center px-4 w-full pointer-events-none"
           >
-            <h2
-              className="text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white tracking-widest uppercase font-normal drop-shadow-md leading-[1.6] md:leading-[1.8]"
+             <h2 
+              className="text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white tracking-widest uppercase font-normal drop-shadow-md leading-[1.6] md:leading-[1.8]" 
               style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
-            >
-              {t.sec3Title1} <br />
-              {t.sec3Title2} <span className="font-bold">{t.sec3Title3}</span>
-            </h2>
+             >
+               {t.sec3Title1} <br />
+               {t.sec3Title2} <span className="font-bold">{t.sec3Title3}</span>
+             </h2>
           </motion.div>
 
           {/* Container Global 3D */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <motion.div
-              className="relative flex items-center justify-center"
-              style={{
-                rotateX,
-                rotateY,
-                transformStyle: "preserve-3d"
-              }}
+            <motion.div 
+               className="relative flex items-center justify-center"
+               style={{ 
+                 rotateX, 
+                 rotateY,
+                 transformStyle: "preserve-3d" 
+               }}
             >
 
-              {/* Imagem Central */}
-              <motion.div
-                className="absolute z-50 w-20 h-20 sm:w-24 sm:h-24 md:w-40 md:h-40 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.15)] ring-4 ring-white/10 bg-zinc-800 flex items-center justify-center"
-                style={{
-                  rotateX: invRotateX,
-                  rotateY: invRotateY,
-                  scale: centralImageScale,
-                  transformStyle: "preserve-3d"
-                }}
-              >
-                <img
-                  src={CENTRAL_IMAGE}
-                  alt="Central Profile"
-                  className="w-[95%] h-[95%] rounded-full object-cover"
-                />
-              </motion.div>
+               {/* Imagem Central */}
+               <motion.div 
+                  className="absolute z-50 w-20 h-20 sm:w-24 sm:h-24 md:w-40 md:h-40 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.15)] ring-4 ring-white/10 bg-zinc-800 flex items-center justify-center"
+                  style={{ 
+                    rotateX: invRotateX, 
+                    rotateY: invRotateY,
+                    scale: centralImageScale,
+                    transformStyle: "preserve-3d"
+                  }}
+               >
+                  <img 
+                    src={CENTRAL_IMAGE} 
+                    alt="Central Profile" 
+                    className="w-[95%] h-[95%] rounded-full object-cover" 
+                  />
+               </motion.div>
 
-              {/* Anéis de Saturno */}
-              <SaturnRing radius={200} duration={30} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(0, 3)} />
-              <SaturnRing radius={350} duration={45} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(3, 6)} />
-              <SaturnRing radius={500} duration={60} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(6, 9)} />
-
-              <SaturnRing radius={650} duration={75} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
-              <SaturnRing radius={800} duration={90} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
-              <SaturnRing radius={950} duration={105} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
+               {/* Anéis de Saturno */}
+               <SaturnRing radius={200} duration={30} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(0, 3)} />
+               <SaturnRing radius={350} duration={45} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(3, 6)} />
+               <SaturnRing radius={500} duration={60} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(6, 9)} />
+               
+               <SaturnRing radius={650} duration={75} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
+               <SaturnRing radius={800} duration={90} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
+               <SaturnRing radius={950} duration={105} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
 
             </motion.div>
           </div>
@@ -614,8 +611,8 @@ export default function App() {
           {/* OVERLAYS DE TRANSIÇÃO (Círculo Branco) */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
             <motion.div
-              className="w-32 h-32 bg-white rounded-full"
-              style={{ scale: whiteCircleScale }}
+               className="w-32 h-32 bg-white rounded-full"
+               style={{ scale: whiteCircleScale }}
             />
           </div>
 
@@ -624,15 +621,15 @@ export default function App() {
 
       {/* --- QUARTA DOBRA (SERVIÇOS) --- */}
       <section id="servicos" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-center text-zinc-900 pt-24 pb-12 px-4 sm:px-[20px] md:px-10">
-
+        
         {/* Cabeçalho da Sessão 4 */}
-        <h2
+        <h2 
           className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-bold text-left mb-8 sm:mb-12"
           style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
         >
           {t.sec4Title}
         </h2>
-
+        
         {/* Componente de Acordeão com os Cards de Serviço */}
         <div className="w-full">
           <ServicesAccordion data={t.servicesData} />
@@ -640,27 +637,27 @@ export default function App() {
 
         {/* Frase de Impacto Final da Sessão 4 */}
         <div className="w-full mt-12 sm:mt-16 md:mt-24 flex justify-center">
-          <h3
+          <h3 
             className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold tracking-widest text-center uppercase max-w-5xl leading-snug text-black"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
           >
             {t.sec4Footer}
           </h3>
         </div>
-
+        
       </section>
 
       {/* --- QUINTA DOBRA (BIO & ESTATÍSTICAS) --- */}
       <section id="bio" className="relative z-[150] w-full bg-white flex flex-col items-center justify-start text-zinc-900 pt-8 pb-24 px-4 sm:px-[20px] md:px-10">
-
+        
         {/* Grid de Estatísticas (Preenchimento nulo, Traçado preto) */}
         <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16">
           {t.stats.map((stat, i) => (
-            <div
-              key={i}
+            <div 
+              key={i} 
               className="border border-black bg-transparent rounded-[10px] p-6 sm:p-8 md:p-12 flex flex-col justify-center items-start hover:bg-zinc-50 transition-colors duration-300"
             >
-              <h2
+              <h2 
                 className="text-4xl sm:text-5xl md:text-6xl font-medium mb-2 sm:mb-3 text-black tracking-tight"
                 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
               >
@@ -675,20 +672,20 @@ export default function App() {
 
         {/* Layout do Fundador (Filippo) */}
         <div className="w-full max-w-7xl border border-black rounded-[10px] flex flex-col lg:flex-row overflow-hidden bg-transparent">
-
+          
           {/* Lado Esquerdo: Imagem com Overlay */}
           <div className="relative w-full lg:w-[45%] h-[350px] sm:h-[450px] md:h-[500px] lg:h-auto border-b lg:border-b-0 lg:border-r border-black">
-            <img
-              src="https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/project.webp"
-              alt="Filippo Rodrigues"
+            <img 
+              src="https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/project.webp" 
+              alt="Filippo Rodrigues" 
               className="w-full h-full object-cover object-center"
             />
             {/* Gradiente escuro para garantir leitura do texto */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
+            
             {/* Textos sobre a imagem */}
             <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 text-white">
-              <h4
+              <h4 
                 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 tracking-widest uppercase"
                 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
               >
@@ -702,13 +699,13 @@ export default function App() {
 
           {/* Lado Direito: Textos e CTA */}
           <div className="w-full lg:w-[55%] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-transparent">
-            <h3
+            <h3 
               className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 uppercase tracking-widest text-black"
               style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
             >
               {t.bioTitle}
             </h3>
-
+            
             <div className="flex flex-col gap-4 sm:gap-6 text-zinc-600 text-sm md:text-base leading-relaxed mb-8 sm:mb-12 font-light">
               <p>{t.bioP1}</p>
               <p>{t.bioP2}</p>
@@ -730,31 +727,31 @@ export default function App() {
               </motion.div>
             </button>
           </div>
-
+          
         </div>
       </section>
 
       {/* --- SEXTA DOBRA (FOOTER / CONTATO) --- */}
       <footer id="orcamento" className="relative z-[200] w-full bg-black text-white flex flex-col items-center justify-center pt-24 sm:pt-32 pb-12 px-4 sm:px-[20px] md:px-10">
-
+        
         <div className="flex flex-col items-center text-center max-w-6xl mx-auto mb-16 sm:mb-24 md:mb-32">
           {/* Manchete Final com Tamanho Reduzido e Fonte Hypik no Destaque */}
-          <h2
+          <h2 
             className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-snug mb-8 sm:mb-10 md:mb-14"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
           >
             <span className="block text-zinc-500 mb-1 sm:mb-2 md:mb-4">{t.sec6Title1}</span>
             <span className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-1 sm:gap-3 md:gap-5 text-white">
               <span>{t.sec6Title2}</span>
-              <span
-                style={{ fontFamily: "'Hypik', sans-serif" }}
+              <span 
+                style={{ fontFamily: "'Hypik', sans-serif" }} 
                 className="font-normal tracking-wide text-4xl sm:text-5xl md:text-7xl lg:text-8xl mt-1 sm:mt-0"
               >
                 {t.sec6Title3}
               </span>
             </span>
           </h2>
-
+          
           {/* Botão idêntico ao da Head (tamanho padrão shiny-btn) */}
           <button className="shiny-btn">
             <span>{t.sec6Btn}</span>
@@ -793,7 +790,7 @@ const ServicesAccordion = ({ data }) => {
     <div className="w-full flex flex-col md:flex-row h-[800px] sm:h-[600px] md:h-[500px] lg:h-[600px] gap-4">
       {data.map((item, index) => {
         const isActive = activeIndex === index;
-
+        
         return (
           <motion.div
             key={item.id}
@@ -807,75 +804,75 @@ const ServicesAccordion = ({ data }) => {
             className="relative bg-transparent rounded-[10px] overflow-hidden cursor-pointer border border-black group flex-shrink-0 hover:bg-zinc-50 transition-colors duration-300"
           >
             <div className="relative w-full h-full z-10 flex">
+               
+               {/* --- ESTADO INATIVO: Texto Rotacionado --- */}
+               <motion.div 
+                 initial={false}
+                 animate={{ opacity: isActive ? 0 : 1 }}
+                 className="absolute inset-0 flex items-center justify-center md:justify-center px-4 pointer-events-none"
+               >
+                 <h4 
+                    className="text-black font-bold uppercase tracking-widest whitespace-nowrap text-lg md:text-xl hidden md:block"
+                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+                 >
+                   {item.title}
+                 </h4>
+                 <h4 
+                    className="text-black font-bold uppercase tracking-widest whitespace-nowrap text-sm sm:text-base md:hidden w-full text-center"
+                    style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+                 >
+                   {item.title}
+                 </h4>
+               </motion.div>
 
-              {/* --- ESTADO INATIVO: Texto Rotacionado --- */}
-              <motion.div
-                initial={false}
-                animate={{ opacity: isActive ? 0 : 1 }}
-                className="absolute inset-0 flex items-center justify-center md:justify-center px-4 pointer-events-none"
-              >
-                <h4
-                  className="text-black font-bold uppercase tracking-widest whitespace-nowrap text-lg md:text-xl hidden md:block"
-                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
-                >
-                  {item.title}
-                </h4>
-                <h4
-                  className="text-black font-bold uppercase tracking-widest whitespace-nowrap text-sm sm:text-base md:hidden w-full text-center"
-                  style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
-                >
-                  {item.title}
-                </h4>
-              </motion.div>
-
-              {/* --- ESTADO ATIVO: Conteúdo Expandido --- */}
-              <motion.div
-                initial={false}
-                animate={{ opacity: isActive ? 1 : 0 }}
-                className="w-full h-full flex flex-col md:flex-row p-4 sm:p-6 md:p-10 gap-4 sm:gap-6 md:gap-10"
-              >
-                {/* Lado Esquerdo: Textos e Lista */}
-                <div className="flex-1 flex flex-col justify-between overflow-hidden min-w-[150px] sm:min-w-[200px]">
-                  <div>
-                    <h4
-                      className="text-2xl sm:text-3xl md:text-5xl text-black font-bold leading-none mb-3 sm:mb-4 md:mb-6"
-                      style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
-                    >
-                      {item.titleSplit.map((part, pI) => <span key={pI} className="block">{part}</span>)}
-                    </h4>
-                    <p className="text-zinc-600 text-xs sm:text-sm md:text-base leading-relaxed max-w-sm mb-4 sm:mb-6 md:mb-8 font-light">
-                      {item.desc}
-                    </p>
+               {/* --- ESTADO ATIVO: Conteúdo Expandido --- */}
+               <motion.div
+                 initial={false}
+                 animate={{ opacity: isActive ? 1 : 0 }}
+                 className="w-full h-full flex flex-col md:flex-row p-4 sm:p-6 md:p-10 gap-4 sm:gap-6 md:gap-10"
+               >
+                  {/* Lado Esquerdo: Textos e Lista */}
+                  <div className="flex-1 flex flex-col justify-between overflow-hidden min-w-[150px] sm:min-w-[200px]">
+                    <div>
+                      <h4 
+                        className="text-2xl sm:text-3xl md:text-5xl text-black font-bold leading-none mb-3 sm:mb-4 md:mb-6"
+                        style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+                      >
+                         {item.titleSplit.map((part, pI) => <span key={pI} className="block">{part}</span>)}
+                      </h4>
+                      <p className="text-zinc-600 text-xs sm:text-sm md:text-base leading-relaxed max-w-sm mb-4 sm:mb-6 md:mb-8 font-light">
+                         {item.desc}
+                      </p>
+                    </div>
+                    
+                    <div className="flex flex-col gap-2 sm:gap-3">
+                       {item.subs.map((sub, sI) => (
+                         <div key={sI} className="flex items-center gap-2 sm:gap-3">
+                           <div className="rotate-[-90deg]">
+                             <svg width="8" height="8" className="sm:w-[10px] sm:h-[10px]" viewBox="0 0 10 10" fill="black">
+                               <path d="M 8.144 5.138 C 8.327 5.321 8.327 5.617 8.144 5.8 L 5.487 8.456 C 5.304 8.639 5.008 8.639 4.825 8.456 L 2.169 5.8 C 1.997 5.615 2.002 5.327 2.18 5.149 C 2.359 4.97 2.646 4.966 2.831 5.137 L 4.687 6.994 L 4.687 2.344 C 4.687 2.085 4.897 1.875 5.156 1.875 C 5.415 1.875 5.625 2.085 5.625 2.344 L 5.625 6.994 L 7.481 5.138 C 7.664 4.955 7.961 4.955 8.144 5.138 Z"/>
+                             </svg>
+                           </div>
+                           <span className="text-zinc-600 font-medium text-[10px] sm:text-xs md:text-sm hover:text-black transition-colors cursor-pointer">
+                             {sub}
+                           </span>
+                         </div>
+                       ))}
+                    </div>
                   </div>
 
-                  <div className="flex flex-col gap-2 sm:gap-3">
-                    {item.subs.map((sub, sI) => (
-                      <div key={sI} className="flex items-center gap-2 sm:gap-3">
-                        <div className="rotate-[-90deg]">
-                          <svg width="8" height="8" className="sm:w-[10px] sm:h-[10px]" viewBox="0 0 10 10" fill="black">
-                            <path d="M 8.144 5.138 C 8.327 5.321 8.327 5.617 8.144 5.8 L 5.487 8.456 C 5.304 8.639 5.008 8.639 4.825 8.456 L 2.169 5.8 C 1.997 5.615 2.002 5.327 2.18 5.149 C 2.359 4.97 2.646 4.966 2.831 5.137 L 4.687 6.994 L 4.687 2.344 C 4.687 2.085 4.897 1.875 5.156 1.875 C 5.415 1.875 5.625 2.085 5.625 2.344 L 5.625 6.994 L 7.481 5.138 C 7.664 4.955 7.961 4.955 8.144 5.138 Z" />
-                          </svg>
-                        </div>
-                        <span className="text-zinc-600 font-medium text-[10px] sm:text-xs md:text-sm hover:text-black transition-colors cursor-pointer">
-                          {sub}
-                        </span>
-                      </div>
-                    ))}
+                  {/* Lado Direito: Vídeo Demonstrativo com Borda Preta */}
+                  <div className="flex-1 w-full h-32 sm:h-48 md:h-full rounded-lg overflow-hidden border border-black flex-shrink-0">
+                     <video 
+                       src={item.video} 
+                       autoPlay 
+                       loop 
+                       muted 
+                       playsInline 
+                       className="w-full h-full object-cover"
+                     />
                   </div>
-                </div>
-
-                {/* Lado Direito: Vídeo Demonstrativo com Borda Preta */}
-                <div className="flex-1 w-full h-32 sm:h-48 md:h-full rounded-lg overflow-hidden border border-black flex-shrink-0">
-                  <video
-                    src={item.video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </motion.div>
+               </motion.div>
             </div>
           </motion.div>
         );
@@ -897,7 +894,7 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
         // Cálculo matemático para posicionar na borda do círculo
         const angle = (i / images.length) * 360;
         const rad = angle * (Math.PI / 180);
-        const x = Math.cos(rad) * 50;
+        const x = Math.cos(rad) * 50; 
         const y = Math.sin(rad) * 50;
 
         return (
@@ -929,16 +926,16 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
   );
 };
 
-// Componente que renderiza a malha de quadrados da transição (Hero -> Portfólio) - CORRIGIDO a matemática da transição
+// Componente que renderiza a malha de quadrados da transição (Hero -> Portfólio) - MATEMÁTICA CORRIGIDA
 const GridOverlay = ({ scrollYProgress }) => {
   const cols = 20;
   const rows = 15;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Começa a aparecer após 40% do scroll e termina aos 98%
-      const start = 0.4 + Math.random() * 0.4;
-      const end = Math.min(start + 0.15, 0.98);
+      // Começa a aparecer após 40% do scroll e termina aos 98% garantindo tela 100% branca
+      const start = 0.4 + Math.random() * 0.4; 
+      const end = Math.min(start + 0.15, 0.98); 
       return { id: i, start, end };
     });
   }, []);
