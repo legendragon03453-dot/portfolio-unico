@@ -2,9 +2,16 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 
-// Injetando a fonte customizada globalmente e as keyframes
+// Injetando a fonte customizada e a CURA DO STICKY globalmente
 const FontStyle = () => (
   <style dangerouslySetInnerHTML={{__html: `
+    /* --- A CURA DEFINITIVA PARA O STICKY --- */
+    /* Isso força o Vite a não matar o seu scroll */
+    html, body, #root {
+      overflow-x: clip !important;
+      overflow-y: visible !important;
+    }
+
     @font-face {
       font-family: 'Hypik';
       src: url('https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/hypik.otf') format('opentype');
@@ -306,6 +313,7 @@ const ORBIT_IMAGES = [
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%208_1x.webp",
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%209_1x.webp",
 ];
+
 const CENTRAL_IMAGE = "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/unico%20fili.webp?raw=true";
 
 const LanguageToggle = ({ lang, setLang }) => (
@@ -370,10 +378,10 @@ export default function App() {
   };
 
   return (
-    // ATENÇÃO: div principal SEM overflow-x-hidden
     <div id="home" className="bg-zinc-900 font-sans">
       <FontStyle />
 
+      {/* DOBRA 1 - HERO */}
       <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
           
@@ -464,6 +472,7 @@ export default function App() {
         </div>
       </div>
 
+      {/* DOBRA 2 - PORTFÓLIO */}
       <section id="portfolio" className="relative z-50 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
           <h2 
@@ -531,6 +540,7 @@ export default function App() {
         </div>
       </section>
 
+      {/* DOBRA 3 - ÓRBITA INFLUENCERS */}
       <section id="influencers" ref={sec3Ref} className="relative w-full h-[150vh]">
         <div 
           className="sticky top-0 left-0 w-full h-screen bg-zinc-950 overflow-hidden"
@@ -596,19 +606,17 @@ export default function App() {
         </div>
       </section>
 
+      {/* DOBRA 4 - SERVIÇOS */}
       <section id="servicos" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-center text-zinc-900 pt-24 pb-12 px-4 sm:px-[20px] md:px-10">
-        
         <h2 
           className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-bold text-left mb-8 sm:mb-12"
           style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
         >
           {t.sec4Title}
         </h2>
-        
         <div className="w-full">
           <ServicesAccordion data={t.servicesData} />
         </div>
-
         <div className="w-full mt-12 sm:mt-16 md:mt-24 flex justify-center">
           <h3 
             className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold tracking-widest text-center uppercase max-w-5xl leading-snug text-black"
@@ -617,11 +625,10 @@ export default function App() {
             {t.sec4Footer}
           </h3>
         </div>
-        
       </section>
 
+      {/* DOBRA 5 - BIO */}
       <section id="bio" className="relative z-[150] w-full bg-white flex flex-col items-center justify-start text-zinc-900 pt-8 pb-24 px-4 sm:px-[20px] md:px-10">
-        
         <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16">
           {t.stats.map((stat, i) => (
             <div 
@@ -642,7 +649,6 @@ export default function App() {
         </div>
 
         <div className="w-full max-w-7xl border border-black rounded-[10px] flex flex-col lg:flex-row overflow-hidden bg-transparent">
-          
           <div className="relative w-full lg:w-[45%] h-[350px] sm:h-[450px] md:h-[500px] lg:h-auto border-b lg:border-b-0 lg:border-r border-black">
             <img 
               src="https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/project.webp" 
@@ -692,12 +698,11 @@ export default function App() {
               </motion.div>
             </button>
           </div>
-          
         </div>
       </section>
 
+      {/* DOBRA 6 - FOOTER */}
       <footer id="orcamento" className="relative z-[200] w-full bg-black text-white flex flex-col items-center justify-center pt-24 sm:pt-32 pb-12 px-4 sm:px-[20px] md:px-10">
-        
         <div className="flex flex-col items-center text-center max-w-6xl mx-auto mb-16 sm:mb-24 md:mb-32">
           <h2 
             className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-snug mb-8 sm:mb-10 md:mb-14"
@@ -714,7 +719,6 @@ export default function App() {
               </span>
             </span>
           </h2>
-          
           <button className="shiny-btn">
             <span>{t.sec6Btn}</span>
           </button>
@@ -739,6 +743,7 @@ export default function App() {
   );
 }
 
+// COMPONENTES AUXILIARES
 const ServicesAccordion = ({ data }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -752,14 +757,11 @@ const ServicesAccordion = ({ data }) => {
             key={item.id}
             onMouseEnter={() => setActiveIndex(index)}
             onClick={() => setActiveIndex(index)}
-            animate={{
-              flex: isActive ? 5 : 1
-            }}
+            animate={{ flex: isActive ? 5 : 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="relative bg-transparent rounded-[10px] overflow-hidden cursor-pointer border border-black group flex-shrink-0 hover:bg-zinc-50 transition-colors duration-300"
           >
             <div className="relative w-full h-full z-10 flex">
-               
                <motion.div 
                  initial={false}
                  animate={{ opacity: isActive ? 0 : 1 }}
@@ -814,14 +816,7 @@ const ServicesAccordion = ({ data }) => {
                   </div>
 
                   <div className="flex-1 w-full h-32 sm:h-48 md:h-full rounded-lg overflow-hidden border border-black flex-shrink-0">
-                     <video 
-                       src={item.video} 
-                       autoPlay 
-                       loop 
-                       muted 
-                       playsInline 
-                       className="w-full h-full object-cover"
-                     />
+                     <video src={item.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
                   </div>
                </motion.div>
             </div>
@@ -881,7 +876,8 @@ const GridOverlay = ({ scrollYProgress }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      const start = 0.4 + Math.random() * 0.4; 
+      // Ajuste para garantir que a tela fique branca e a animação acompanhe a Hero parada
+      const start = 0.5 + Math.random() * 0.3; 
       const end = Math.min(start + 0.15, 0.98); 
       return { id: i, start, end };
     });
@@ -908,26 +904,14 @@ const Square = ({ scrollYProgress, start, end }) => {
 };
 
 const SlideTabs = ({ tabs }) => {
-  const [position, setPosition] = useState({
-    left: 0,
-    width: 0,
-    opacity: 0,
-  });
-
+  const [position, setPosition] = useState({ left: 0, width: 0, opacity: 0 });
   return (
     <ul
-      onMouseLeave={() => {
-        setPosition((pv) => ({
-          ...pv,
-          opacity: 0,
-        }));
-      }}
+      onMouseLeave={() => setPosition((pv) => ({ ...pv, opacity: 0 }))}
       className="relative mx-auto flex w-fit rounded-full border border-white p-1 shadow-2xl pointer-events-auto"
     >
       {tabs.map((tab) => (
-        <Tab key={tab.label} href={tab.href} setPosition={setPosition}>
-          {tab.label}
-        </Tab>
+        <Tab key={tab.label} href={tab.href} setPosition={setPosition}>{tab.label}</Tab>
       ))}
       <Cursor position={position} />
     </ul>
@@ -936,15 +920,11 @@ const SlideTabs = ({ tabs }) => {
 
 const Tab = ({ children, href, setPosition }) => {
   const ref = useRef(null);
-
   const handleClick = (e) => {
     e.preventDefault();
     const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
   };
-
   return (
     <li
       ref={ref}
@@ -952,11 +932,7 @@ const Tab = ({ children, href, setPosition }) => {
       onMouseEnter={() => {
         if (!ref?.current) return;
         const { width } = ref.current.getBoundingClientRect();
-        setPosition({
-          left: ref.current.offsetLeft,
-          width,
-          opacity: 1,
-        });
+        setPosition({ left: ref.current.offsetLeft, width, opacity: 1 });
       }}
       className="relative z-10 block cursor-pointer px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs uppercase text-white mix-blend-difference md:px-5 md:py-3 md:text-base font-semibold"
     >
@@ -968,14 +944,8 @@ const Tab = ({ children, href, setPosition }) => {
 const Cursor = ({ position }) => {
   return (
     <motion.li
-      animate={{
-        ...position,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 30
-      }}
+      animate={{ ...position }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className="absolute z-0 h-7 rounded-full bg-white md:h-12"
     />
   );
