@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0A0A0A;
+  --color-secondary: #000000;
+  --color-accent: #74FE03;
+}
+
+/* Global Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #0A0A0A;
+  color: #FFFFFF;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fix for padding issues */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #74FE03;
+  color: #000000;
+}
