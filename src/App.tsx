@@ -1,7 +1,5 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
-import { supabase } from './lib/supabase';
-import { ArrowRight, Check, X, Target, DollarSign, User, Send, Loader2 } from 'lucide-react';
+import React, { useState, useRef, useMemo } from 'react';
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 
 // Injetando a fonte customizada globalmente e as keyframes
 const FontStyle = () => (
@@ -12,7 +10,6 @@ const FontStyle = () => (
       src: url('https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/hypik.otf') format('opentype');
       font-weight: normal;
       font-style: normal;
-      font-display: swap;
     }
     @keyframes gradient-x {
       0% { background-position: 0% 50%; }
@@ -115,18 +112,6 @@ const FontStyle = () => (
         font-size: 0.85rem;
       }
     }
-
-    /* GLOBAL FIXES */
-    body {
-      background-color: #0A0A0A;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
-    section {
-      width: 100%;
-      position: relative;
-    }
   `}} />
 );
 
@@ -159,7 +144,7 @@ const translations = {
         id: "01",
         title: "Identidade Visual",
         titleSplit: ["Identidade", "Visual"],
-        desc: "Criamos marcas com propósito e sistemas visuais que conectam profundamente com o seu público desde o primeiro olhar. Uma identidade inesquecível.",
+        desc: "Criamos marcas com propósito e sistemas visuais que conectam profundamente com o seu público desde o primeiro olhar. Uma identidade inesquesse.",
         subs: ["Identidade de Marca", "Direção de Arte", "Direção Criativa", "Manuais de Marca"],
         video: "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/CARD%201.webm"
       },
@@ -186,8 +171,6 @@ const translations = {
       { num: "+100", suffix: "", label: "Clientes satisfeitos" },
       { num: "+5", suffix: "", label: "Lançamentos colaborados" }
     ],
-
-
     bioName: "Filippo Rodrigues",
     bioRole: "Fundador do UNICO e o cara por trás de vários influencers",
     bioTitle: "O ÚNICO",
@@ -273,7 +256,7 @@ const translations = {
 };
 
 // Projetos de Exemplo
-const PROJECTS_FALLBACK = [
+const PROJECTS = [
   {
     id: "1vc9ono",
     title: "Kastle AI",
@@ -328,10 +311,11 @@ const ORBIT_IMAGES = [
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%208_1x.webp",
   "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/influs/Ellipse%209_1x.webp",
 ];
+// Imagem Central
 const CENTRAL_IMAGE = "https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/unico%20fili.webp?raw=true";
 
 // Componente de Troca de Idioma
-const LanguageToggle = ({ lang, setLang }: { lang: 'pt' | 'en', setLang: (l: 'pt' | 'en') => void }) => (
+const LanguageToggle = ({ lang, setLang }) => (
   <div className="flex items-center rounded-full border border-white p-1 shadow-2xl pointer-events-auto">
     <button
       onClick={() => setLang('pt')}
@@ -352,35 +336,16 @@ export default function App() {
   const containerRef = useRef(null);
 
   // Estado do idioma
-  const [lang, setLang] = useState<'pt' | 'en'>('pt');
+  const [lang, setLang] = useState('pt');
   const t = translations[lang];
 
-  // Projetos dinâmicos
-  const [projects, setProjects] = useState<any[]>([]);
-  const [isQuizOpen, setIsQuizOpen] = useState(false);
-
-  useEffect(() => {
-    async function fetchProjects() {
-      try {
-        const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-        if (data && data.length > 0) setProjects(data);
-        else setProjects(PROJECTS_FALLBACK);
-      } catch (e) {
-        setProjects(PROJECTS_FALLBACK);
-      }
-    }
-    fetchProjects();
-  }, []);
-
-  // Hook para o scroll da primeira sessão
-  // AJUSTE: offset "end start" mantém a medição até o topo do container sair
+  // Hook para o scroll da primeira sessão - CORRIGIDO
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
   });
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
-  const heroContentOpacity = useTransform(scrollYProgress, [0.4, 0.6], [1, 0]);
 
   // =============== LÓGICA DO SCROLL DA SESSÃO 3 PARA A SESSÃO 4 ===============
   const sec3Ref = useRef(null);
@@ -389,6 +354,7 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
+  // Mapeamento das transições: Encurtado para uma transição mais rápida e direta
   const sec3TextOpacity = useTransform(sec3Progress, [0, 0.2], [1, 0]);
   const ringsScale = useTransform(sec3Progress, [0.1, 0.8], [1, 0]);
   const centralImageScale = useTransform(sec3Progress, [0.75, 0.8], [1, 0]);
@@ -397,29 +363,34 @@ export default function App() {
   // =============== LÓGICA DE MOUSE PARA O 3D ===============
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
   const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+
   const rotateX = useTransform(smoothY, [-0.5, 0.5], [55, 85]);
   const rotateY = useTransform(smoothX, [-0.5, 0.5], [-25, 25]);
+
   const invRotateX = useTransform(rotateX, v => -v);
   const invRotateY = useTransform(rotateY, v => -v);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e) => {
     const { clientX, clientY } = e;
     const x = (clientX / window.innerWidth) - 0.5;
     const y = (clientY / window.innerHeight) - 0.5;
     mouseX.set(x);
     mouseY.set(y);
   };
+  // =========================================================
 
   return (
-    <div id="home" className="bg-[#0A0A0A] font-sans overflow-clip w-full">
+    // CORRIGIDO overflow-clip para overflow-x-hidden
+    <div id="home" className="bg-zinc-900 font-sans overflow-x-hidden">
       <FontStyle />
 
       {/* --- PRIMEIRA DOBRA (HERO) --- */}
-      {/* AJUSTE: Altura de 200vh para permitir o preenchimento total da tela antes da revelação */}
+      {/* CORRIGIDO de 250vh para 200vh */}
       <div ref={containerRef} className="relative w-full h-[200vh]">
-        <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col bg-zinc-900">
+        <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
 
           <div
             className="absolute inset-0 z-50 w-full h-full pointer-events-none opacity-20 mix-blend-plus-lighter"
@@ -431,81 +402,77 @@ export default function App() {
             loop
             muted
             playsInline
-            controls={false}
-            className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-90 pointer-events-none"
+            className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-90"
             src="https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/UNCI%20BG%20FDS.webm"
           />
 
-          <motion.div style={{ opacity: heroContentOpacity }} className="flex flex-col h-full w-full">
-            <header className="relative z-[60] w-full pt-6 md:pt-10 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
-              <div className="flex md:hidden w-full justify-between items-start pointer-events-none">
-                <p className="text-[8px] tracking-widest font-light uppercase text-white/60 text-left max-w-[120px] leading-relaxed">
-                  {t.heroTop}
-                </p>
-                <LanguageToggle lang={lang} setLang={setLang} />
-              </div>
+          <header className="relative z-20 w-full pt-6 md:pt-10 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+            <div className="flex md:hidden w-full justify-between items-start pointer-events-none">
+              <p className="text-[8px] tracking-widest font-light uppercase text-white/60 text-left max-w-[120px] leading-relaxed">
+                {t.heroTop}
+              </p>
+              <LanguageToggle lang={lang} setLang={setLang} />
+            </div>
 
-              <div className="hidden md:block w-1/3 pointer-events-none">
-                <p className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/60 text-left max-w-[160px] leading-relaxed">
-                  {t.heroTop}
-                </p>
-              </div>
-
-              <div className="flex justify-center w-full md:w-1/3">
-                <SlideTabs tabs={t.nav} />
-              </div>
-
-              <div className="hidden md:flex w-1/3 justify-end items-center pointer-events-none">
-                <LanguageToggle lang={lang} setLang={setLang} />
-              </div>
-            </header>
-
-            <main className="relative z-10 flex-1 flex flex-col items-center justify-center pointer-events-none">
-              <div className="flex flex-col items-stretch w-fit -mt-12 sm:-mt-16 md:-mt-24">
-                <h1
-                  className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[13rem] leading-normal p-4 md:p-10 overflow-visible whitespace-nowrap tracking-wider text-white opacity-90 text-center"
-                  style={{ fontFamily: "'Hypik', sans-serif" }}
-                >
-                  &nbsp;UNICO&nbsp;
-                </h1>
-
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-16 w-full -mt-[30px] sm:-mt-[50px] md:-mt-[90px] lg:-mt-[120px] text-[8px] sm:text-[10px] md:text-sm lg:text-base tracking-[0.2em] text-white/80 uppercase font-light">
-                  <span>{t.heroSub1}</span>
-                  <span>{t.heroSub2}</span>
-                  <span>{t.heroSub3}</span>
-                </div>
-
-                <div className="flex justify-center mt-10 sm:mt-12 md:mt-16 pointer-events-auto">
-                  <button
-                    onClick={() => setIsQuizOpen(true)}
-                    className="shiny-btn shiny-btn-lg"
-                  >
-                    <span>{t.sec2BtnQuote}</span>
-                  </button>
-                </div>
-              </div>
-            </main>
-
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-20 pointer-events-none w-full flex justify-center">
-              <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
-                {t.footer}
+            <div className="hidden md:block w-1/3 pointer-events-none">
+              <p className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/60 text-left max-w-[160px] leading-relaxed">
+                {t.heroTop}
               </p>
             </div>
 
-            <motion.div
-              style={{ opacity: indicatorOpacity }}
-              className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
-            >
-              <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
-                {t.scroll}
-              </span>
-              <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50">
-                  <path d="M12 5v14M19 12l-7 7-7-7" />
-                </svg>
-              </motion.div>
-            </motion.div>
+            <div className="flex justify-center w-full md:w-1/3">
+              <SlideTabs tabs={t.nav} />
+            </div>
 
+            <div className="hidden md:flex w-1/3 justify-end items-center pointer-events-none">
+              <LanguageToggle lang={lang} setLang={setLang} />
+            </div>
+          </header>
+
+          <main className="relative z-10 flex-1 flex flex-col items-center justify-center pointer-events-none">
+            <div className="flex flex-col items-stretch w-fit -mt-12 sm:-mt-16 md:-mt-24">
+              <h1
+                className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[13rem] leading-normal p-4 md:p-10 overflow-visible whitespace-nowrap tracking-wider text-white opacity-90 text-center"
+                style={{ fontFamily: "'Hypik', sans-serif" }}
+              >
+                &nbsp;UNICO&nbsp;
+              </h1>
+
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-16 w-full -mt-[30px] sm:-mt-[50px] md:-mt-[90px] lg:-mt-[120px] text-[8px] sm:text-[10px] md:text-sm lg:text-base tracking-[0.2em] text-white/80 uppercase font-light">
+                <span>{t.heroSub1}</span>
+                <span>{t.heroSub2}</span>
+                <span>{t.heroSub3}</span>
+              </div>
+
+              <div className="flex justify-center mt-10 sm:mt-12 md:mt-16 pointer-events-auto">
+                <button
+                  onClick={() => document.querySelector('#orcamento')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="shiny-btn shiny-btn-lg"
+                >
+                  <span>{t.sec2BtnQuote}</span>
+                </button>
+              </div>
+            </div>
+          </main>
+
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-20 pointer-events-none w-full flex justify-center">
+            <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
+              {t.footer}
+            </p>
+          </div>
+
+          <motion.div
+            style={{ opacity: indicatorOpacity }}
+            className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
+          >
+            <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
+              {t.scroll}
+            </span>
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50">
+                <path d="M12 5v14M19 12l-7 7-7-7" />
+              </svg>
+            </motion.div>
           </motion.div>
 
           <GridOverlay scrollYProgress={scrollYProgress} />
@@ -513,56 +480,53 @@ export default function App() {
       </div>
 
       {/* --- SEGUNDA DOBRA (PORTFÓLIO) --- */}
-      <motion.section
-        id="portfolio"
-        style={{ opacity: useTransform(scrollYProgress, [0.7, 0.85], [0, 1]) }}
-        className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 -mt-[100vh] py-24 pb-12 px-4 sm:px-[20px] md:px-10"
-      >
-        <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end gap-2 mb-12">
+      {/* CORRIGIDO a margem negativa que quebrava o layout e o z-index */}
+      <section id="portfolio" className="relative z-50 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
+        <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
           <h2
-            className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal leading-tight"
+            className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
           >
-            {t.sec2Title1} <br className="md:hidden" /> <span className="font-bold tracking-wider">{t.sec2Title2}</span>
+            {t.sec2Title1} <span className="font-bold tracking-wider">{t.sec2Title2}</span>
           </h2>
           <span className="text-[9px] sm:text-[10px] md:text-xs tracking-widest font-light uppercase text-zinc-400 md:pb-3">
             {"<BY FILIPPO>"}
           </span>
         </div>
 
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-          {projects.map((project) => (
+        <div className="w-full px-4 sm:px-[20px] md:px-10 mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {PROJECTS.map((project) => (
             <a
               key={project.id}
-              href={project.link || "#"}
-              className="relative block w-full rounded-[15px] overflow-hidden aspect-video group cursor-pointer transition-all duration-500 hover:scale-[1.01] shadow-2xl"
+              href={project.link}
+              className="relative block w-full rounded-[10px] overflow-hidden aspect-video group cursor-pointer transition-transform duration-500 hover:scale-[1.02] shadow-sm hover:shadow-xl"
             >
               <video
-                src={project.video_url || project.video}
-                poster={project.poster_url || project.poster}
+                src={project.video}
+                poster={project.poster}
                 autoPlay
                 loop
                 muted
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 ease-out group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover z-0 scale-105 group-hover:scale-100 transition-transform duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/30 z-10 transition-opacity duration-500 group-hover:opacity-80" />
               <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-                <div className="bg-white/10 backdrop-blur-md text-white px-8 py-3 rounded-full border border-white/20 uppercase tracking-widest text-xs font-semibold transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                <div className="bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-full border border-white/20 uppercase tracking-widest text-[10px] md:text-xs font-semibold transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                   {t.cardHover}
                 </div>
               </div>
-              <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 z-20 flex flex-col gap-4">
+              <div className="absolute top-4 left-4 md:top-6 md:left-6 z-20 flex flex-col gap-3">
                 <h5
-                  className="text-white text-xl sm:text-2xl md:text-4xl tracking-wide font-normal"
+                  className="text-white text-lg sm:text-xl md:text-2xl tracking-wide drop-shadow-md"
                   style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
                 >
                   {project.title}
                 </h5>
                 <div className="flex flex-wrap gap-2">
-                  {project.tags?.map((tag: string) => (
-                    <div key={tag} className="rounded-full px-4 py-1.5 backdrop-blur-xl border border-white/20" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                      <p className="text-white text-[10px] md:text-xs font-medium tracking-widest uppercase">
+                  {project.tags.map(tag => (
+                    <div key={tag} className="rounded-[5px] px-3 py-1.5 backdrop-blur-[15px]" style={{ backgroundColor: 'rgba(240, 240, 240, 0.25)' }}>
+                      <p className="text-[#f4f2ee] text-[9px] sm:text-[10px] md:text-xs font-medium tracking-wide drop-shadow-sm">
                         {tag}
                       </p>
                     </div>
@@ -573,16 +537,16 @@ export default function App() {
           ))}
         </div>
 
-        <div className="mt-20 w-full flex items-center justify-center gap-8">
-          <button className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-bold hover:opacity-50 transition-opacity duration-300">
+        <div className="mt-12 sm:mt-16 w-full flex items-center justify-center gap-6">
+          <button className="text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest font-light hover:opacity-50 transition-opacity duration-300">
             {t.sec2Btn}
           </button>
-          <div className="w-[1px] h-8 bg-zinc-200"></div>
-          <button onClick={() => setIsQuizOpen(true)} className="shiny-btn">
+          <div className="w-[1px] h-6 bg-zinc-300"></div>
+          <button className="shiny-btn">
             <span>{t.sec2BtnQuote}</span>
           </button>
         </div>
-      </motion.section>
+      </section>
 
       {/* --- TERCEIRA DOBRA (ÓRBITA 3D E TRANSIÇÃO) --- */}
       <section id="influencers" ref={sec3Ref} className="relative w-full h-[150vh]">
@@ -591,227 +555,323 @@ export default function App() {
           onMouseMove={handleMouseMove}
           style={{ perspective: "1500px" }}
         >
+          {/* Texto Absoluto no Topo */}
           <motion.div
             style={{ opacity: sec3TextOpacity }}
-            className="absolute top-24 left-0 right-0 z-30 text-center px-4 w-full pointer-events-none"
+            className="absolute top-16 sm:top-20 md:top-24 left-0 right-0 z-30 text-center px-4 w-full pointer-events-none"
           >
             <h2
-              className="text-2xl md:text-5xl lg:text-6xl text-white tracking-widest uppercase font-normal leading-relaxed"
+              className="text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white tracking-widest uppercase font-normal drop-shadow-md leading-[1.6] md:leading-[1.8]"
               style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
             >
               {t.sec3Title1} <br />
-              {t.sec3Title2} <span className="font-bold text-[#74FE03]">{t.sec3Title3}</span>
+              {t.sec3Title2} <span className="font-bold">{t.sec3Title3}</span>
             </h2>
           </motion.div>
 
+          {/* Container Global 3D */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
             <motion.div
               className="relative flex items-center justify-center"
-              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d"
+              }}
             >
+
+              {/* Imagem Central */}
               <motion.div
-                className="absolute z-50 w-32 h-32 md:w-56 md:h-56 rounded-full shadow-[0_0_80px_rgba(116,254,3,0.2)] ring-8 ring-white/5 bg-zinc-900 flex items-center justify-center overflow-hidden"
-                style={{ rotateX: invRotateX, rotateY: invRotateY, scale: centralImageScale, transformStyle: "preserve-3d" }}
+                className="absolute z-50 w-20 h-20 sm:w-24 sm:h-24 md:w-40 md:h-40 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.15)] ring-4 ring-white/10 bg-zinc-800 flex items-center justify-center"
+                style={{
+                  rotateX: invRotateX,
+                  rotateY: invRotateY,
+                  scale: centralImageScale,
+                  transformStyle: "preserve-3d"
+                }}
               >
-                <img src={CENTRAL_IMAGE} alt="Único" className="w-full h-full object-cover" />
+                <img
+                  src={CENTRAL_IMAGE}
+                  alt="Central Profile"
+                  className="w-[95%] h-[95%] rounded-full object-cover"
+                />
               </motion.div>
 
+              {/* Anéis de Saturno */}
               <SaturnRing radius={200} duration={30} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(0, 3)} />
-              <SaturnRing radius={380} duration={45} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(3, 6)} />
-              <SaturnRing radius={580} duration={60} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(6, 9)} />
+              <SaturnRing radius={350} duration={45} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(3, 6)} />
+              <SaturnRing radius={500} duration={60} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(6, 9)} />
+
+              <SaturnRing radius={650} duration={75} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
+              <SaturnRing radius={800} duration={90} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
+              <SaturnRing radius={950} duration={105} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={[]} />
+
             </motion.div>
           </div>
 
+          {/* OVERLAYS DE TRANSIÇÃO (Círculo Branco) */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
-            <motion.div className="w-40 h-40 bg-white rounded-full" style={{ scale: whiteCircleScale }} />
+            <motion.div
+              className="w-32 h-32 bg-white rounded-full"
+              style={{ scale: whiteCircleScale }}
+            />
           </div>
+
         </div>
       </section>
 
       {/* --- QUARTA DOBRA (SERVIÇOS) --- */}
-      <section id="servicos" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start pt-32 pb-24 px-4 sm:px-[20px] md:px-10">
-        <h2 className="text-4xl md:text-7xl tracking-[0.2em] uppercase font-bold text-left mb-16 tracking-tighter" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
+      <section id="servicos" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-center text-zinc-900 pt-24 pb-12 px-4 sm:px-[20px] md:px-10">
+
+        {/* Cabeçalho da Sessão 4 */}
+        <h2
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-bold text-left mb-8 sm:mb-12"
+          style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+        >
           {t.sec4Title}
         </h2>
+
+        {/* Componente de Acordeão com os Cards de Serviço */}
         <div className="w-full">
           <ServicesAccordion data={t.servicesData} />
         </div>
 
-        <div className="w-full mt-32 flex justify-center">
-          <h3 className="text-2xl md:text-5xl font-bold tracking-[0.1em] text-center uppercase max-w-6xl leading-tight text-black" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
+        {/* Frase de Impacto Final da Sessão 4 */}
+        <div className="w-full mt-12 sm:mt-16 md:mt-24 flex justify-center">
+          <h3
+            className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold tracking-widest text-center uppercase max-w-5xl leading-snug text-black"
+            style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+          >
             {t.sec4Footer}
           </h3>
         </div>
+
       </section>
 
       {/* --- QUINTA DOBRA (BIO & ESTATÍSTICAS) --- */}
-      <section id="bio" className="relative z-[150] w-full bg-white flex flex-col items-center pt-8 pb-32 px-4 sm:px-[20px] md:px-10">
-        <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+      <section id="bio" className="relative z-[150] w-full bg-white flex flex-col items-center justify-start text-zinc-900 pt-8 pb-24 px-4 sm:px-[20px] md:px-10">
+
+        {/* Grid de Estatísticas (Preenchimento nulo, Traçado preto) */}
+        <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16">
           {t.stats.map((stat, i) => (
-            <div key={i} className="border-2 border-black rounded-[20px] p-12 flex flex-col justify-center items-start hover:bg-black hover:text-white transition-all duration-500 group">
-              <h2 className="text-6xl font-bold mb-4 tracking-tighter" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
-                {stat.num}<span className="text-3xl font-light opacity-50">{stat.suffix}</span>
+            <div
+              key={i}
+              className="border border-black bg-transparent rounded-[10px] p-6 sm:p-8 md:p-12 flex flex-col justify-center items-start hover:bg-zinc-50 transition-colors duration-300"
+            >
+              <h2
+                className="text-4xl sm:text-5xl md:text-6xl font-medium mb-2 sm:mb-3 text-black tracking-tight"
+                style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+              >
+                {stat.num}<span className="text-2xl sm:text-3xl md:text-4xl font-light">{stat.suffix}</span>
               </h2>
-              <p className="text-xs uppercase tracking-[0.4em] font-bold opacity-60 group-hover:opacity-100">
+              <p className="text-[10px] sm:text-xs md:text-sm text-zinc-500 uppercase tracking-widest font-semibold">
                 {stat.label}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="w-full max-w-7xl border-2 border-black rounded-[20px] flex flex-col lg:flex-row overflow-hidden">
-          <div className="relative w-full lg:w-[45%] h-[500px] lg:h-auto border-b lg:border-b-0 lg:border-r-2 border-black">
-            <img src="https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/project.webp" alt="Filippo" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-            <div className="absolute bottom-10 left-10 text-white">
-              <h4 className="text-3xl font-bold mb-2 tracking-widest uppercase" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>{t.bioName}</h4>
-              <p className="text-xs font-mono uppercase tracking-[0.3em] text-zinc-400">{t.bioRole}</p>
+        {/* Layout do Fundador (Filippo) */}
+        <div className="w-full max-w-7xl border border-black rounded-[10px] flex flex-col lg:flex-row overflow-hidden bg-transparent">
+
+          {/* Lado Esquerdo: Imagem com Overlay */}
+          <div className="relative w-full lg:w-[45%] h-[350px] sm:h-[450px] md:h-[500px] lg:h-auto border-b lg:border-b-0 lg:border-r border-black">
+            <img
+              src="https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/project.webp"
+              alt="Filippo Rodrigues"
+              className="w-full h-full object-cover object-center"
+            />
+            {/* Gradiente escuro para garantir leitura do texto */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+
+            {/* Textos sobre a imagem */}
+            <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 text-white">
+              <h4
+                className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 tracking-widest uppercase"
+                style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+              >
+                {t.bioName}
+              </h4>
+              <p className="text-[9px] sm:text-[10px] md:text-xs font-mono uppercase tracking-widest text-zinc-300 leading-relaxed">
+                {t.bioRole}
+              </p>
             </div>
           </div>
 
-          <div className="w-full lg:w-[55%] p-10 md:p-20 flex flex-col justify-center">
-            <h3 className="text-4xl md:text-6xl font-bold mb-10 uppercase tracking-tighter text-black" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>{t.bioTitle}</h3>
-            <div className="flex flex-col gap-8 text-zinc-600 text-lg leading-relaxed mb-16 font-light">
+          {/* Lado Direito: Textos e CTA */}
+          <div className="w-full lg:w-[55%] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-transparent">
+            <h3
+              className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 uppercase tracking-widest text-black"
+              style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+            >
+              {t.bioTitle}
+            </h3>
+
+            <div className="flex flex-col gap-4 sm:gap-6 text-zinc-600 text-sm md:text-base leading-relaxed mb-8 sm:mb-12 font-light">
               <p>{t.bioP1}</p>
               <p>{t.bioP2}</p>
               <p>{t.bioP3}</p>
             </div>
-            <button className="group flex items-center justify-between w-full max-w-md px-10 py-6 border-2 border-black rounded-full hover:bg-black hover:text-white transition-all duration-500">
-              <span className="text-xs uppercase tracking-[0.5em] font-black">{t.bioBtn}</span>
-              <motion.div animate={{ x: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-                <ArrowRight className="w-6 h-6" />
+
+            {/* Botão Clean com Seta Animada */}
+            <button className="group flex items-center justify-between w-fit gap-4 sm:gap-6 px-6 py-3 sm:px-8 sm:py-4 border border-black rounded-full hover:bg-black hover:text-white transition-all duration-300">
+              <span className="text-[10px] sm:text-xs md:text-sm uppercase tracking-widest font-bold">
+                {t.bioBtn}
+              </span>
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               </motion.div>
             </button>
           </div>
+
         </div>
       </section>
 
       {/* --- SEXTA DOBRA (FOOTER / CONTATO) --- */}
-      <footer id="orcamento" className="relative z-[200] w-full bg-black text-white flex flex-col items-center pt-32 pb-16 px-4 md:px-10">
-        <div className="flex flex-col items-center text-center max-w-6xl mx-auto mb-32">
-          <h2 className="text-3xl md:text-7xl font-bold uppercase tracking-tight leading-tight mb-16" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
-            <span className="block text-zinc-700 mb-4">{t.sec6Title1}</span>
-            <span className="flex flex-col md:flex-row items-center justify-center gap-6">
+      <footer id="orcamento" className="relative z-[200] w-full bg-black text-white flex flex-col items-center justify-center pt-24 sm:pt-32 pb-12 px-4 sm:px-[20px] md:px-10">
+
+        <div className="flex flex-col items-center text-center max-w-6xl mx-auto mb-16 sm:mb-24 md:mb-32">
+          {/* Manchete Final com Tamanho Reduzido e Fonte Hypik no Destaque */}
+          <h2
+            className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-snug mb-8 sm:mb-10 md:mb-14"
+            style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+          >
+            <span className="block text-zinc-500 mb-1 sm:mb-2 md:mb-4">{t.sec6Title1}</span>
+            <span className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-1 sm:gap-3 md:gap-5 text-white">
               <span>{t.sec6Title2}</span>
-              <span style={{ fontFamily: "'Hypik', sans-serif" }} className="text-5xl md:text-9xl text-[#74FE03]">{t.sec6Title3}</span>
+              <span
+                style={{ fontFamily: "'Hypik', sans-serif" }}
+                className="font-normal tracking-wide text-4xl sm:text-5xl md:text-7xl lg:text-8xl mt-1 sm:mt-0"
+              >
+                {t.sec6Title3}
+              </span>
             </span>
           </h2>
-          <button onClick={() => setIsQuizOpen(true)} className="shiny-btn shiny-btn-lg">
+
+          {/* Botão idêntico ao da Head (tamanho padrão shiny-btn) */}
+          <button className="shiny-btn">
             <span>{t.sec6Btn}</span>
           </button>
         </div>
 
-        <div className="w-full max-w-7xl flex flex-col md:flex-row items-center justify-between border-t border-white/10 pt-12 gap-8">
-          <div className="flex gap-8 text-[10px] tracking-[0.4em] uppercase font-black text-zinc-500">
-            {t.sec6Links.map((link) => (
-              <a key={link} href="#" className="hover:text-white transition-all">{link}</a>
+        {/* Rodapé Técnico */}
+        <div className="w-full max-w-7xl flex flex-col md:flex-row items-center justify-between border-t border-white/20 pt-8 gap-6 md:gap-0">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 text-[9px] sm:text-[10px] md:text-xs tracking-widest uppercase font-semibold text-zinc-400">
+            {t.sec6Links.map((link, i) => (
+              <React.Fragment key={link}>
+                <a href="#" className="hover:text-white transition-colors duration-300">{link}</a>
+                {i < t.sec6Links.length - 1 && <span className="text-zinc-700 hidden sm:inline">—</span>}
+              </React.Fragment>
             ))}
           </div>
-          <p className="text-[10px] tracking-widest text-zinc-700 uppercase">{t.sec6Copy}</p>
+          <p className="text-[8px] sm:text-[9px] md:text-[10px] tracking-widest text-zinc-600 uppercase text-center md:text-right">
+            {t.sec6Copy}
+          </p>
         </div>
       </footer>
 
-      {/* MODAL QUIZ */}
-      <AnimatePresence>
-        {isQuizOpen && <LeadQuiz onClose={() => setIsQuizOpen(false)} lang={lang} />}
-      </AnimatePresence>
     </div>
   );
 }
 
 // ==========================================
-// COMPONENTES AUXILIARES
+// COMPONENTES AUXILIARES DAS SESSÕES
 // ==========================================
 
-const LeadQuiz = ({ onClose, lang }: { onClose: () => void, lang: 'pt' | 'en' }) => {
-  const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({ name: '', email: '', company: '', revenue: '', instagram: '', objective: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDone, setIsDone] = useState(false);
-
-  const steps = [
-    { id: 'name', label: lang === 'pt' ? 'Qual o seu nome?' : "What's your name?", placeholder: 'Seu nome completo', icon: <User />, type: 'text' },
-    { id: 'email', label: lang === 'pt' ? 'Seu melhor e-mail?' : 'Your best email?', placeholder: 'email@exemplo.com', icon: <Send />, type: 'email' },
-    { id: 'revenue', label: lang === 'pt' ? 'Qual o faturamento mensal atual?' : 'Current monthly revenue?', type: 'select', options: ['0 - 10k', '10k - 50k', '50k - 100k', '100k - 200k', '200k+'], icon: <DollarSign /> },
-    { id: 'objective', label: lang === 'pt' ? 'Qual o seu principal objetivo?' : 'What is your main goal?', placeholder: 'Descreva seu projeto...', icon: <Target />, type: 'textarea' }
-  ];
-
-  const handleNext = () => { if (step < steps.length - 1) setStep(step + 1); else submitLead(); };
-
-  const submitLead = async () => {
-    setIsSubmitting(true);
-    try {
-      const score = formData.revenue.includes('200k') ? 100 : (formData.revenue.includes('100k') ? 90 : 50);
-      await supabase.from('leads').insert([{ ...formData, score, status: 'Triagem' }]);
-      setIsDone(true);
-      setTimeout(onClose, 3000);
-    } catch (e) { alert('Erro ao enviar.'); }
-    setIsSubmitting(false);
-  };
-
-  const currentStep = steps[step];
-
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[300] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-6">
-      <button onClick={onClose} className="absolute top-10 right-10 text-white/40 hover:text-white transition-all"><X className="w-10 h-10" /></button>
-      <div className="w-full max-w-2xl">
-        {!isDone ? (
-          <motion.div key={step} initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-12">
-            <div className="flex items-center gap-6"><div className="w-16 h-16 rounded-full border-2 border-[#74FE03] flex items-center justify-center text-[#74FE03]">{currentStep.icon}</div><h3 className="text-3xl md:text-5xl font-bold text-white uppercase tracking-tighter">{currentStep.label}</h3></div>
-            {currentStep.type === 'select' ? (
-              <div className="grid grid-cols-1 gap-4">{currentStep.options?.map((opt: string) => (<button key={opt} onClick={() => { setFormData({ ...formData, [currentStep.id]: opt }); setTimeout(handleNext, 300); }} className={`w-full p-6 h-20 rounded-2xl border-2 text-left text-xl transition-all ${formData[currentStep.id as keyof typeof formData] === opt ? 'border-[#74FE03] bg-[#74FE03]/10 text-white' : 'border-white/10 bg-white/5 text-white/50 hover:border-white/20'}`}>{opt}</button>))}</div>
-            ) : currentStep.type === 'textarea' ? (
-              <textarea autoFocus placeholder={currentStep.placeholder} value={formData[currentStep.id as keyof typeof formData]} onChange={(e) => setFormData({ ...formData, [currentStep.id]: e.target.value })} className="w-full bg-transparent border-b-4 border-white/20 py-4 text-2xl md:text-4xl text-white outline-none focus:border-[#74FE03] transition-colors h-48 resize-none" />
-            ) : (
-              <input autoFocus type={currentStep.type} placeholder={currentStep.placeholder} value={formData[currentStep.id as keyof typeof formData]} onChange={(e) => setFormData({ ...formData, [currentStep.id]: e.target.value })} onKeyDown={(e) => e.key === 'Enter' && handleNext()} className="w-full bg-transparent border-b-4 border-white/20 py-4 text-3xl md:text-6xl text-white outline-none focus:border-[#74FE03] transition-colors" />
-            )}
-            <div className="flex justify-between items-center mt-12">
-              <button onClick={() => step > 0 && setStep(step - 1)} className={`text-white/30 hover:text-white uppercase tracking-[0.5em] text-xs font-black ${step === 0 ? 'opacity-0' : ''}`}>BACK</button>
-              <button onClick={handleNext} disabled={isSubmitting || !formData[currentStep.id as keyof typeof formData]} className="bg-white text-black px-12 py-6 rounded-full font-black uppercase tracking-[0.3em] text-sm flex items-center gap-4 disabled:opacity-20 hover:bg-[#74FE03] transition-all">
-                {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : (step === steps.length - 1 ? 'FINISH' : 'NEXT')}
-              </button>
-            </div>
-          </motion.div>
-        ) : (
-          <div className="flex flex-col items-center gap-8 text-center"><div className="w-32 h-32 rounded-full bg-[#74FE03] flex items-center justify-center text-black"><Check className="w-16 h-16" /></div><h2 className="text-5xl font-black text-white uppercase tracking-tighter">SUCCESS</h2><p className="text-white/50 text-xl max-w-md">Our AI is analyzing your application. We will contact you soon.</p></div>
-        )}
-      </div>
-    </motion.div>
-  );
-};
-
-const ServicesAccordion = ({ data }: { data: any[] }) => {
+// Componente: Acordeão de Serviços (Layout Expandível com Design Claro e Borda Preta)
+const ServicesAccordion = ({ data }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+
   return (
-    <div className="w-full flex flex-col md:flex-row h-[1200px] md:h-[700px] gap-6">
+    <div className="w-full flex flex-col md:flex-row h-[800px] sm:h-[600px] md:h-[500px] lg:h-[600px] gap-4">
       {data.map((item, index) => {
         const isActive = activeIndex === index;
+
         return (
-          <motion.div key={item.id} onMouseEnter={() => setActiveIndex(index)} onClick={() => setActiveIndex(index)} animate={{ flex: isActive ? 8 : 1 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="relative bg-transparent rounded-[20px] overflow-hidden cursor-pointer border-2 border-black flex-shrink-0 group">
-            <div className="relative w-full h-full flex">
-              <motion.div animate={{ opacity: isActive ? 0 : 1 }} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <h4 className="text-black font-black uppercase tracking-[0.4em] whitespace-nowrap text-2xl hidden md:block" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>{item.title}</h4>
-                <h4 className="text-black font-black uppercase tracking-[0.2em] md:hidden">{item.title}</h4>
+          <motion.div
+            key={item.id}
+            onMouseEnter={() => setActiveIndex(index)}
+            onClick={() => setActiveIndex(index)}
+            animate={{
+              // Expande brutalmente o flex-grow do card ativo
+              flex: isActive ? 5 : 1
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="relative bg-transparent rounded-[10px] overflow-hidden cursor-pointer border border-black group flex-shrink-0 hover:bg-zinc-50 transition-colors duration-300"
+          >
+            <div className="relative w-full h-full z-10 flex">
+
+              {/* --- ESTADO INATIVO: Texto Rotacionado --- */}
+              <motion.div
+                initial={false}
+                animate={{ opacity: isActive ? 0 : 1 }}
+                className="absolute inset-0 flex items-center justify-center md:justify-center px-4 pointer-events-none"
+              >
+                <h4
+                  className="text-black font-bold uppercase tracking-widest whitespace-nowrap text-lg md:text-xl hidden md:block"
+                  style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+                >
+                  {item.title}
+                </h4>
+                <h4
+                  className="text-black font-bold uppercase tracking-widest whitespace-nowrap text-sm sm:text-base md:hidden w-full text-center"
+                  style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+                >
+                  {item.title}
+                </h4>
               </motion.div>
-              <motion.div animate={{ opacity: isActive ? 1 : 0 }} className="w-full h-full flex flex-col md:flex-row p-12 gap-12 overflow-hidden">
-                <div className="flex-1 flex flex-col justify-between min-w-[300px]">
+
+              {/* --- ESTADO ATIVO: Conteúdo Expandido --- */}
+              <motion.div
+                initial={false}
+                animate={{ opacity: isActive ? 1 : 0 }}
+                className="w-full h-full flex flex-col md:flex-row p-4 sm:p-6 md:p-10 gap-4 sm:gap-6 md:gap-10"
+              >
+                {/* Lado Esquerdo: Textos e Lista */}
+                <div className="flex-1 flex flex-col justify-between overflow-hidden min-w-[150px] sm:min-w-[200px]">
                   <div>
-                    <h4 className="text-4xl md:text-7xl text-black font-black leading-none mb-10 tracking-tighter">
-                      {item.titleSplit.map((part: string, pI: number) => <span key={pI} className="block">{part}</span>)}
+                    <h4
+                      className="text-2xl sm:text-3xl md:text-5xl text-black font-bold leading-none mb-3 sm:mb-4 md:mb-6"
+                      style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+                    >
+                      {item.titleSplit.map((part, pI) => <span key={pI} className="block">{part}</span>)}
                     </h4>
-                    <p className="text-zinc-500 text-lg leading-relaxed max-w-md mb-12 font-light">{item.desc}</p>
+                    <p className="text-zinc-600 text-xs sm:text-sm md:text-base leading-relaxed max-w-sm mb-4 sm:mb-6 md:mb-8 font-light">
+                      {item.desc}
+                    </p>
                   </div>
-                  <div className="flex flex-col gap-4">
-                    {item.subs.map((sub: string, sI: number) => (
-                      <div key={sI} className="flex items-center gap-4 group/item">
-                        <div className="w-2 h-2 bg-black rounded-full transition-all group-hover/item:scale-150" />
-                        <span className="text-zinc-400 font-bold text-sm tracking-widest uppercase hover:text-black transition-colors">{sub}</span>
+
+                  <div className="flex flex-col gap-2 sm:gap-3">
+                    {item.subs.map((sub, sI) => (
+                      <div key={sI} className="flex items-center gap-2 sm:gap-3">
+                        <div className="rotate-[-90deg]">
+                          <svg width="8" height="8" className="sm:w-[10px] sm:h-[10px]" viewBox="0 0 10 10" fill="black">
+                            <path d="M 8.144 5.138 C 8.327 5.321 8.327 5.617 8.144 5.8 L 5.487 8.456 C 5.304 8.639 5.008 8.639 4.825 8.456 L 2.169 5.8 C 1.997 5.615 2.002 5.327 2.18 5.149 C 2.359 4.97 2.646 4.966 2.831 5.137 L 4.687 6.994 L 4.687 2.344 C 4.687 2.085 4.897 1.875 5.156 1.875 C 5.415 1.875 5.625 2.085 5.625 2.344 L 5.625 6.994 L 7.481 5.138 C 7.664 4.955 7.961 4.955 8.144 5.138 Z" />
+                          </svg>
+                        </div>
+                        <span className="text-zinc-600 font-medium text-[10px] sm:text-xs md:text-sm hover:text-black transition-colors cursor-pointer">
+                          {sub}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
-                <div className="flex-[1.5] w-full h-full rounded-[15px] overflow-hidden border-2 border-black">
-                  <video src={item.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+
+                {/* Lado Direito: Vídeo Demonstrativo com Borda Preta */}
+                <div className="flex-1 w-full h-32 sm:h-48 md:h-full rounded-lg overflow-hidden border border-black flex-shrink-0">
+                  <video
+                    src={item.video}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </motion.div>
             </div>
@@ -822,18 +882,43 @@ const ServicesAccordion = ({ data }: { data: any[] }) => {
   );
 };
 
-const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }: any) => {
+// Componente do Anel 3D de Saturno
+const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) => {
   return (
-    <motion.div className="absolute rounded-full border border-white/5 flex items-center justify-center" style={{ width: radius * 2, height: radius * 2, transformStyle: "preserve-3d", scale }} animate={{ rotateZ: 360 * direction }} transition={{ duration, repeat: Infinity, ease: "linear" }}>
-      {images.map((src: string, i: number) => {
+    <motion.div
+      className="absolute rounded-full border border-solid border-white/20 flex items-center justify-center"
+      style={{ width: radius * 2, height: radius * 2, transformStyle: "preserve-3d", scale }}
+      animate={{ rotateZ: 360 * direction }}
+      transition={{ duration, repeat: Infinity, ease: "linear" }}
+    >
+      {images.map((src, i) => {
+        // Cálculo matemático para posicionar na borda do círculo
         const angle = (i / images.length) * 360;
         const rad = angle * (Math.PI / 180);
         const x = Math.cos(rad) * 50;
         const y = Math.sin(rad) * 50;
+
         return (
-          <div key={i} className="absolute w-16 h-16 md:w-24 md:h-24 -translate-x-1/2 -translate-y-1/2" style={{ left: `calc(50% + ${x}%)`, top: `calc(50% + ${y}%)`, transformStyle: "preserve-3d" }}>
-            <motion.div className="w-full h-full" animate={{ rotateZ: -360 * direction }} transition={{ duration, repeat: Infinity, ease: "linear" }} style={{ transformStyle: "preserve-3d" }}>
-              <motion.img src={src} className="w-full h-full rounded-full object-cover shadow-2xl border-4 border-white/10" style={{ rotateX: invX, rotateY: invY }} />
+          <div
+            key={i}
+            className="absolute w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 -translate-x-1/2 -translate-y-1/2"
+            style={{
+              left: `calc(50% + ${x}%)`,
+              top: `calc(50% + ${y}%)`,
+              transformStyle: "preserve-3d"
+            }}
+          >
+            <motion.div
+              className="w-full h-full"
+              animate={{ rotateZ: -360 * direction }}
+              transition={{ duration, repeat: Infinity, ease: "linear" }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <motion.img
+                src={src}
+                className="w-full h-full rounded-full object-cover shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/20 bg-zinc-800"
+                style={{ rotateX: invX, rotateY: invY }}
+              />
             </motion.div>
           </div>
         );
@@ -842,32 +927,19 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }: 
   );
 };
 
-// GRID BRUTALISTA: Animação de quadrados que preenchem a tela
-const GridOverlay = ({ scrollYProgress }: { scrollYProgress: any }) => {
-  // Aumentamos a densidade para um visual mais "preenchido" e premium
-  const cols = 25;
-  const rows = 20;
+// Componente que renderiza a malha de quadrados da transição (Hero -> Portfólio) - CORRIGIDO a matemática da transição
+const GridOverlay = ({ scrollYProgress }) => {
+  const cols = 20;
+  const rows = 15;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      const x = i % cols;
-      const y = Math.floor(i / cols);
-
-      // Padrão de revelação: Fluxo orgânico do centro e de cima para baixo
-      const centerX = cols / 2;
-      const centerY = rows / 2;
-      const distFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) / (cols / 1.5);
-      const verticalPos = y / rows;
-
-      // Sincronizado com o heroContentOpacity (que vai de 0.4 a 0.6)
-      // Queremos que comece um pouco antes e termine logo depois
-      const bias = (verticalPos * 0.2) + (distFromCenter * 0.1);
-      const start = 0.25 + bias + Math.random() * 0.2;
-      const end = Math.min(start + 0.15, 0.75); // Garante que tudo esteja branco perto de 0.75
-
-      return { id: i, start, end, x, y };
+      // Começa a aparecer após 40% do scroll e termina aos 98%
+      const start = 0.4 + Math.random() * 0.4;
+      const end = Math.min(start + 0.15, 0.98);
+      return { id: i, start, end };
     });
-  }, [cols, rows]);
+  }, []);
 
   return (
     <div
@@ -884,44 +956,82 @@ const GridOverlay = ({ scrollYProgress }: { scrollYProgress: any }) => {
   );
 };
 
-const Square = ({ scrollYProgress, start, end }: { scrollYProgress: any, start: number, end: number }) => {
-  // Transformações para tornar a entrada do quadrado mais dinâmica
+const Square = ({ scrollYProgress, start, end }) => {
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  const scale = useTransform(scrollYProgress, [start, Math.min(end + 0.05, 1)], [0.5, 1.05]);
-  const rotate = useTransform(scrollYProgress, [start, end], [12, 0]);
-
-  return (
-    <motion.div
-      style={{
-        opacity,
-        scale,
-        rotate,
-        willChange: "opacity, transform"
-      }}
-      className="bg-white w-full h-full border-[0.5px] border-zinc-100/10"
-    />
-  );
+  return <motion.div style={{ opacity, willChange: "opacity" }} className="bg-white w-full h-full scale-[1.05]" />;
 };
 
+// Componente da Navbar Animada
+const SlideTabs = ({ tabs }) => {
+  const [position, setPosition] = useState({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
 
-const SlideTabs = ({ tabs }: { tabs: any[] }) => {
-  const [position, setPosition] = useState({ left: 0, width: 0, opacity: 0 });
   return (
-    <ul onMouseLeave={() => setPosition((pv) => ({ ...pv, opacity: 0 }))} className="relative mx-auto flex w-fit rounded-full border-2 border-white/10 p-1.5 shadow-2xl pointer-events-auto backdrop-blur-xl">
-      {tabs.map((tab) => <Tab key={tab.label} href={tab.href} setPosition={setPosition}>{tab.label}</Tab>)}
+    <ul
+      onMouseLeave={() => {
+        setPosition((pv) => ({
+          ...pv,
+          opacity: 0,
+        }));
+      }}
+      className="relative mx-auto flex w-fit rounded-full border border-white p-1 shadow-2xl pointer-events-auto"
+    >
+      {tabs.map((tab) => (
+        <Tab key={tab.label} href={tab.href} setPosition={setPosition}>
+          {tab.label}
+        </Tab>
+      ))}
       <Cursor position={position} />
     </ul>
   );
 };
 
-const Tab = ({ children, href, setPosition }: any) => {
-  const ref = useRef<HTMLLIElement>(null);
-  const handleClick = (e: React.MouseEvent) => { e.preventDefault(); document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' }); };
+const Tab = ({ children, href, setPosition }) => {
+  const ref = useRef(null);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <li ref={ref} onClick={handleClick} onMouseEnter={() => { if (!ref?.current) return; const { width } = ref.current.getBoundingClientRect(); setPosition({ left: ref.current.offsetLeft, width, opacity: 1 }); }} className="relative z-10 block cursor-pointer px-6 py-3 text-[10px] md:text-sm uppercase text-white font-bold leading-none tracking-widest transition-opacity hover:opacity-100 opacity-60">
+    <li
+      ref={ref}
+      onClick={handleClick}
+      onMouseEnter={() => {
+        if (!ref?.current) return;
+        const { width } = ref.current.getBoundingClientRect();
+        setPosition({
+          left: ref.current.offsetLeft,
+          width,
+          opacity: 1,
+        });
+      }}
+      className="relative z-10 block cursor-pointer px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs uppercase text-white mix-blend-difference md:px-5 md:py-3 md:text-base font-semibold"
+    >
       {children}
     </li>
   );
 };
 
-const Cursor = ({ position }: any) => <motion.li animate={position} transition={{ type: "spring", stiffness: 400, damping: 30 }} className="absolute z-0 h-10 rounded-full bg-white/10 md:h-10" />;
+const Cursor = ({ position }) => {
+  return (
+    <motion.li
+      animate={{
+        ...position,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 30
+      }}
+      className="absolute z-0 h-7 rounded-full bg-white md:h-12"
+    />
+  );
+};
