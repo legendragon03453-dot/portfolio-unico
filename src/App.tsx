@@ -370,9 +370,10 @@ export default function App() {
   }, []);
 
   // Hook para o scroll da primeira sessão
+  // AJUSTE: offset "end start" mantém a medição até o topo do container sair
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
+    offset: ["start start", "end start"]
   });
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
@@ -413,7 +414,8 @@ export default function App() {
       <FontStyle />
 
       {/* --- PRIMEIRA DOBRA (HERO) --- */}
-      <div ref={containerRef} className="relative w-full h-[250vh]">
+      {/* AJUSTE: Altura de 200vh para permitir o preenchimento total da tela antes da revelação */}
+      <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col bg-zinc-900">
           
           <div 
@@ -481,28 +483,27 @@ export default function App() {
               </div>
             </main>
 
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-none w-full flex justify-center">
-              <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
-                {t.footer}
-              </p>
-            </div>
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-20 pointer-events-none w-full flex justify-center">
+            <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
+              {t.footer}
+            </p>
+          </div>
+
+          <motion.div 
+            style={{ opacity: indicatorOpacity }}
+            className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
+          >
+            <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
+              {t.scroll}
+            </span>
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+              </svg>
+            </motion.div>
           </motion.div>
 
-          <footer className="absolute">
-            <motion.div 
-              style={{ opacity: indicatorOpacity }}
-              className="absolute bottom-24 md:bottom-32 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
-            >
-              <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
-                {t.scroll}
-              </span>
-              <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50">
-                  <path d="M12 5v14M19 12l-7 7-7-7"/>
-                </svg>
-              </motion.div>
-            </motion.div>
-          </footer>
+          </motion.div>
 
           <GridOverlay scrollYProgress={scrollYProgress} />
         </div>
@@ -834,15 +835,16 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }: 
   );
 };
 
+// AJUSTE NA GRID: Animação progressiva e agressiva no fim do scroll
 const GridOverlay = ({ scrollYProgress }: { scrollYProgress: any }) => {
   const cols = 20;
   const rows = 15;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Synchronized to finish exactly when the Portfolio section appears at 0.6 progress
-      const start = Math.random() * 0.40; 
-      const end = Math.min(0.6, start + 0.1 + Math.random() * 0.1); 
+      // Começa a aparecer após 40% do scroll e termina aos 98%
+      const start = 0.4 + Math.random() * 0.4; 
+      const end = Math.min(start + 0.15, 0.98); 
       return { id: i, start, end };
     });
   }, []);
@@ -864,7 +866,8 @@ const GridOverlay = ({ scrollYProgress }: { scrollYProgress: any }) => {
 
 const Square = ({ scrollYProgress, start, end }: { scrollYProgress: any, start: number, end: number }) => {
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  return <motion.div style={{ opacity }} className="bg-white w-full h-full scale-[1.05]" />;
+  // Adicionado will-change para melhor performance de renderização
+  return <motion.div style={{ opacity, willChange: "opacity" }} className="bg-white w-full h-full scale-[1.05]" />;
 };
 
 
