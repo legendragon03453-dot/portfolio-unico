@@ -5,7 +5,8 @@ import { ArrowRight, Check, X, Target, DollarSign, User, Send, Loader2 } from 'l
 
 // Injetando a fonte customizada globalmente e as keyframes
 const FontStyle = () => (
-  <style dangerouslySetInnerHTML={{__html: `
+  <style dangerouslySetInnerHTML={{
+    __html: `
     @font-face {
       font-family: 'Hypik';
       src: url('https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/hypik.otf') format('opentype');
@@ -185,6 +186,8 @@ const translations = {
       { num: "+100", suffix: "", label: "Clientes satisfeitos" },
       { num: "+5", suffix: "", label: "Lançamentos colaborados" }
     ],
+
+
     bioName: "Filippo Rodrigues",
     bioRole: "Fundador do UNICO e o cara por trás de vários influencers",
     bioTitle: "O ÚNICO",
@@ -330,14 +333,14 @@ const CENTRAL_IMAGE = "https://raw.githubusercontent.com/legendragon03453-dot/FI
 // Componente de Troca de Idioma
 const LanguageToggle = ({ lang, setLang }: { lang: 'pt' | 'en', setLang: (l: 'pt' | 'en') => void }) => (
   <div className="flex items-center rounded-full border border-white p-1 shadow-2xl pointer-events-auto">
-    <button 
-      onClick={() => setLang('pt')} 
+    <button
+      onClick={() => setLang('pt')}
       className={`px-3 py-1.5 text-[10px] md:text-xs rounded-full transition-colors duration-300 ${lang === 'pt' ? 'bg-white text-black' : 'text-white hover:bg-white/20'}`}
     >
       🇧🇷
     </button>
-    <button 
-      onClick={() => setLang('en')} 
+    <button
+      onClick={() => setLang('en')}
       className={`px-3 py-1.5 text-[10px] md:text-xs rounded-full transition-colors duration-300 ${lang === 'en' ? 'bg-white text-black' : 'text-white hover:bg-white/20'}`}
     >
       🇺🇸
@@ -347,7 +350,7 @@ const LanguageToggle = ({ lang, setLang }: { lang: 'pt' | 'en', setLang: (l: 'pt
 
 export default function App() {
   const containerRef = useRef(null);
-  
+
   // Estado do idioma
   const [lang, setLang] = useState<'pt' | 'en'>('pt');
   const t = translations[lang];
@@ -390,13 +393,13 @@ export default function App() {
   const ringsScale = useTransform(sec3Progress, [0.1, 0.8], [1, 0]);
   const centralImageScale = useTransform(sec3Progress, [0.75, 0.8], [1, 0]);
   const whiteCircleScale = useTransform(sec3Progress, [0.8, 1], [0, 50]);
-  
+
   // =============== LÓGICA DE MOUSE PARA O 3D ===============
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-  const rotateX = useTransform(smoothY, [-0.5, 0.5], [55, 85]); 
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [55, 85]);
   const rotateY = useTransform(smoothX, [-0.5, 0.5], [-25, 25]);
   const invRotateX = useTransform(rotateX, v => -v);
   const invRotateY = useTransform(rotateY, v => -v);
@@ -417,8 +420,8 @@ export default function App() {
       {/* AJUSTE: Altura de 200vh para permitir o preenchimento total da tela antes da revelação */}
       <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col bg-zinc-900">
-          
-          <div 
+
+          <div
             className="absolute inset-0 z-50 w-full h-full pointer-events-none opacity-20 mix-blend-plus-lighter"
             style={{ backgroundImage: "url('https://rtl4013zxp.easybuilder.com.br/wp-content/uploads/2025/06/ruido-animado.gif')" }}
           />
@@ -459,13 +462,13 @@ export default function App() {
 
             <main className="relative z-10 flex-1 flex flex-col items-center justify-center pointer-events-none">
               <div className="flex flex-col items-stretch w-fit -mt-12 sm:-mt-16 md:-mt-24">
-                <h1 
+                <h1
                   className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[13rem] leading-normal p-4 md:p-10 overflow-visible whitespace-nowrap tracking-wider text-white opacity-90 text-center"
                   style={{ fontFamily: "'Hypik', sans-serif" }}
                 >
                   &nbsp;UNICO&nbsp;
                 </h1>
-                
+
                 <div className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-16 w-full -mt-[30px] sm:-mt-[50px] md:-mt-[90px] lg:-mt-[120px] text-[8px] sm:text-[10px] md:text-sm lg:text-base tracking-[0.2em] text-white/80 uppercase font-light">
                   <span>{t.heroSub1}</span>
                   <span>{t.heroSub2}</span>
@@ -473,7 +476,7 @@ export default function App() {
                 </div>
 
                 <div className="flex justify-center mt-10 sm:mt-12 md:mt-16 pointer-events-auto">
-                  <button 
+                  <button
                     onClick={() => setIsQuizOpen(true)}
                     className="shiny-btn shiny-btn-lg"
                   >
@@ -483,25 +486,25 @@ export default function App() {
               </div>
             </main>
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-20 pointer-events-none w-full flex justify-center">
-            <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
-              {t.footer}
-            </p>
-          </div>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-20 pointer-events-none w-full flex justify-center">
+              <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
+                {t.footer}
+              </p>
+            </div>
 
-          <motion.div 
-            style={{ opacity: indicatorOpacity }}
-            className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
-          >
-            <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
-              {t.scroll}
-            </span>
-            <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50">
-                <path d="M12 5v14M19 12l-7 7-7-7"/>
-              </svg>
+            <motion.div
+              style={{ opacity: indicatorOpacity }}
+              className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
+            >
+              <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
+                {t.scroll}
+              </span>
+              <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50">
+                  <path d="M12 5v14M19 12l-7 7-7-7" />
+                </svg>
+              </motion.div>
             </motion.div>
-          </motion.div>
 
           </motion.div>
 
@@ -510,13 +513,13 @@ export default function App() {
       </div>
 
       {/* --- SEGUNDA DOBRA (PORTFÓLIO) --- */}
-      <motion.section 
-        id="portfolio" 
+      <motion.section
+        id="portfolio"
         style={{ opacity: useTransform(scrollYProgress, [0.7, 0.85], [0, 1]) }}
         className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 -mt-[100vh] py-24 pb-12 px-4 sm:px-[20px] md:px-10"
       >
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end gap-2 mb-12">
-          <h2 
+          <h2
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal leading-tight"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
           >
@@ -529,19 +532,19 @@ export default function App() {
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           {projects.map((project) => (
-            <a 
-              key={project.id} 
-              href={project.link || "#"} 
+            <a
+              key={project.id}
+              href={project.link || "#"}
               className="relative block w-full rounded-[15px] overflow-hidden aspect-video group cursor-pointer transition-all duration-500 hover:scale-[1.01] shadow-2xl"
             >
-              <video 
-                src={project.video_url || project.video} 
+              <video
+                src={project.video_url || project.video}
                 poster={project.poster_url || project.poster}
-                autoPlay 
-                loop 
-                muted 
-                playsInline 
-                className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 ease-out group-hover:scale-105" 
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10 transition-opacity duration-500" />
               <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
@@ -550,7 +553,7 @@ export default function App() {
                 </div>
               </div>
               <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 z-20 flex flex-col gap-4">
-                <h5 
+                <h5
                   className="text-white text-xl sm:text-2xl md:text-4xl tracking-wide font-normal"
                   style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
                 >
@@ -583,39 +586,39 @@ export default function App() {
 
       {/* --- TERCEIRA DOBRA (ÓRBITA 3D E TRANSIÇÃO) --- */}
       <section id="influencers" ref={sec3Ref} className="relative w-full h-[150vh]">
-        <div 
+        <div
           className="sticky top-0 left-0 w-full h-screen bg-zinc-950 overflow-hidden"
           onMouseMove={handleMouseMove}
           style={{ perspective: "1500px" }}
         >
-          <motion.div 
+          <motion.div
             style={{ opacity: sec3TextOpacity }}
             className="absolute top-24 left-0 right-0 z-30 text-center px-4 w-full pointer-events-none"
           >
-             <h2 
-              className="text-2xl md:text-5xl lg:text-6xl text-white tracking-widest uppercase font-normal leading-relaxed" 
+            <h2
+              className="text-2xl md:text-5xl lg:text-6xl text-white tracking-widest uppercase font-normal leading-relaxed"
               style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
-             >
-               {t.sec3Title1} <br />
-               {t.sec3Title2} <span className="font-bold text-[#74FE03]">{t.sec3Title3}</span>
-             </h2>
+            >
+              {t.sec3Title1} <br />
+              {t.sec3Title2} <span className="font-bold text-[#74FE03]">{t.sec3Title3}</span>
+            </h2>
           </motion.div>
 
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <motion.div 
-               className="relative flex items-center justify-center"
-               style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            <motion.div
+              className="relative flex items-center justify-center"
+              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
             >
-               <motion.div 
-                  className="absolute z-50 w-32 h-32 md:w-56 md:h-56 rounded-full shadow-[0_0_80px_rgba(116,254,3,0.2)] ring-8 ring-white/5 bg-zinc-900 flex items-center justify-center overflow-hidden"
-                  style={{ rotateX: invRotateX, rotateY: invRotateY, scale: centralImageScale, transformStyle: "preserve-3d" }}
-               >
-                  <img src={CENTRAL_IMAGE} alt="Único" className="w-full h-full object-cover" />
-               </motion.div>
+              <motion.div
+                className="absolute z-50 w-32 h-32 md:w-56 md:h-56 rounded-full shadow-[0_0_80px_rgba(116,254,3,0.2)] ring-8 ring-white/5 bg-zinc-900 flex items-center justify-center overflow-hidden"
+                style={{ rotateX: invRotateX, rotateY: invRotateY, scale: centralImageScale, transformStyle: "preserve-3d" }}
+              >
+                <img src={CENTRAL_IMAGE} alt="Único" className="w-full h-full object-cover" />
+              </motion.div>
 
-               <SaturnRing radius={200} duration={30} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(0, 3)} />
-               <SaturnRing radius={380} duration={45} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(3, 6)} />
-               <SaturnRing radius={580} duration={60} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(6, 9)} />
+              <SaturnRing radius={200} duration={30} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(0, 3)} />
+              <SaturnRing radius={380} duration={45} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(3, 6)} />
+              <SaturnRing radius={580} duration={60} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(6, 9)} />
             </motion.div>
           </div>
 
@@ -786,31 +789,31 @@ const ServicesAccordion = ({ data }: { data: any[] }) => {
         return (
           <motion.div key={item.id} onMouseEnter={() => setActiveIndex(index)} onClick={() => setActiveIndex(index)} animate={{ flex: isActive ? 8 : 1 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="relative bg-transparent rounded-[20px] overflow-hidden cursor-pointer border-2 border-black flex-shrink-0 group">
             <div className="relative w-full h-full flex">
-               <motion.div animate={{ opacity: isActive ? 0 : 1 }} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                 <h4 className="text-black font-black uppercase tracking-[0.4em] whitespace-nowrap text-2xl hidden md:block" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>{item.title}</h4>
-                 <h4 className="text-black font-black uppercase tracking-[0.2em] md:hidden">{item.title}</h4>
-               </motion.div>
-               <motion.div animate={{ opacity: isActive ? 1 : 0 }} className="w-full h-full flex flex-col md:flex-row p-12 gap-12 overflow-hidden">
-                  <div className="flex-1 flex flex-col justify-between min-w-[300px]">
-                    <div>
-                      <h4 className="text-4xl md:text-7xl text-black font-black leading-none mb-10 tracking-tighter">
-                         {item.titleSplit.map((part: string, pI: number) => <span key={pI} className="block">{part}</span>)}
-                      </h4>
-                      <p className="text-zinc-500 text-lg leading-relaxed max-w-md mb-12 font-light">{item.desc}</p>
-                    </div>
-                    <div className="flex flex-col gap-4">
-                       {item.subs.map((sub: string, sI: number) => (
-                         <div key={sI} className="flex items-center gap-4 group/item">
-                           <div className="w-2 h-2 bg-black rounded-full transition-all group-hover/item:scale-150" />
-                           <span className="text-zinc-400 font-bold text-sm tracking-widest uppercase hover:text-black transition-colors">{sub}</span>
-                         </div>
-                       ))}
-                    </div>
+              <motion.div animate={{ opacity: isActive ? 0 : 1 }} className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <h4 className="text-black font-black uppercase tracking-[0.4em] whitespace-nowrap text-2xl hidden md:block" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>{item.title}</h4>
+                <h4 className="text-black font-black uppercase tracking-[0.2em] md:hidden">{item.title}</h4>
+              </motion.div>
+              <motion.div animate={{ opacity: isActive ? 1 : 0 }} className="w-full h-full flex flex-col md:flex-row p-12 gap-12 overflow-hidden">
+                <div className="flex-1 flex flex-col justify-between min-w-[300px]">
+                  <div>
+                    <h4 className="text-4xl md:text-7xl text-black font-black leading-none mb-10 tracking-tighter">
+                      {item.titleSplit.map((part: string, pI: number) => <span key={pI} className="block">{part}</span>)}
+                    </h4>
+                    <p className="text-zinc-500 text-lg leading-relaxed max-w-md mb-12 font-light">{item.desc}</p>
                   </div>
-                  <div className="flex-[1.5] w-full h-full rounded-[15px] overflow-hidden border-2 border-black">
-                     <video src={item.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                  <div className="flex flex-col gap-4">
+                    {item.subs.map((sub: string, sI: number) => (
+                      <div key={sI} className="flex items-center gap-4 group/item">
+                        <div className="w-2 h-2 bg-black rounded-full transition-all group-hover/item:scale-150" />
+                        <span className="text-zinc-400 font-bold text-sm tracking-widest uppercase hover:text-black transition-colors">{sub}</span>
+                      </div>
+                    ))}
                   </div>
-               </motion.div>
+                </div>
+                <div className="flex-[1.5] w-full h-full rounded-[15px] overflow-hidden border-2 border-black">
+                  <video src={item.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         );
@@ -825,7 +828,7 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }: 
       {images.map((src: string, i: number) => {
         const angle = (i / images.length) * 360;
         const rad = angle * (Math.PI / 180);
-        const x = Math.cos(rad) * 50; 
+        const x = Math.cos(rad) * 50;
         const y = Math.sin(rad) * 50;
         return (
           <div key={i} className="absolute w-16 h-16 md:w-24 md:h-24 -translate-x-1/2 -translate-y-1/2" style={{ left: `calc(50% + ${x}%)`, top: `calc(50% + ${y}%)`, transformStyle: "preserve-3d" }}>
@@ -849,19 +852,19 @@ const GridOverlay = ({ scrollYProgress }: { scrollYProgress: any }) => {
     return Array.from({ length: cols * rows }).map((_, i) => {
       const x = i % cols;
       const y = Math.floor(i / cols);
-      
+
       // Padrão de revelação: Fluxo orgânico do centro e de cima para baixo
       const centerX = cols / 2;
       const centerY = rows / 2;
       const distFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) / (cols / 1.5);
       const verticalPos = y / rows;
-      
+
       // Sincronizado com o heroContentOpacity (que vai de 0.4 a 0.6)
       // Queremos que comece um pouco antes e termine logo depois
       const bias = (verticalPos * 0.2) + (distFromCenter * 0.1);
-      const start = 0.25 + bias + Math.random() * 0.2; 
+      const start = 0.25 + bias + Math.random() * 0.2;
       const end = Math.min(start + 0.15, 0.75); // Garante que tudo esteja branco perto de 0.75
-      
+
       return { id: i, start, end, x, y };
     });
   }, [cols, rows]);
@@ -886,16 +889,16 @@ const Square = ({ scrollYProgress, start, end }: { scrollYProgress: any, start: 
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
   const scale = useTransform(scrollYProgress, [start, Math.min(end + 0.05, 1)], [0.5, 1.05]);
   const rotate = useTransform(scrollYProgress, [start, end], [12, 0]);
-  
+
   return (
-    <motion.div 
-      style={{ 
-        opacity, 
+    <motion.div
+      style={{
+        opacity,
         scale,
         rotate,
-        willChange: "opacity, transform" 
-      }} 
-      className="bg-white w-full h-full border-[0.5px] border-zinc-100/10" 
+        willChange: "opacity, transform"
+      }}
+      className="bg-white w-full h-full border-[0.5px] border-zinc-100/10"
     />
   );
 };
