@@ -510,7 +510,11 @@ export default function App() {
       </div>
 
       {/* --- SEGUNDA DOBRA (PORTFÓLIO) --- */}
-      <section id="portfolio" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 -mt-[100vh] py-24 pb-12 px-4 sm:px-[20px] md:px-10">
+      <motion.section 
+        id="portfolio" 
+        style={{ opacity: useTransform(scrollYProgress, [0.7, 0.85], [0, 1]) }}
+        className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 -mt-[100vh] py-24 pb-12 px-4 sm:px-[20px] md:px-10"
+      >
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end gap-2 mb-12">
           <h2 
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal leading-tight"
@@ -575,7 +579,7 @@ export default function App() {
             <span>{t.sec2BtnQuote}</span>
           </button>
         </div>
-      </section>
+      </motion.section>
 
       {/* --- TERCEIRA DOBRA (ÓRBITA 3D E TRANSIÇÃO) --- */}
       <section id="influencers" ref={sec3Ref} className="relative w-full h-[150vh]">
@@ -835,19 +839,32 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }: 
   );
 };
 
-// AJUSTE NA GRID: Animação progressiva e agressiva no fim do scroll
+// GRID BRUTALISTA: Animação de quadrados que preenchem a tela
 const GridOverlay = ({ scrollYProgress }: { scrollYProgress: any }) => {
-  const cols = 20;
-  const rows = 15;
+  // Aumentamos a densidade para um visual mais "preenchido" e premium
+  const cols = 25;
+  const rows = 20;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Começa a aparecer após 40% do scroll e termina aos 98%
-      const start = 0.4 + Math.random() * 0.4; 
-      const end = Math.min(start + 0.15, 0.98); 
-      return { id: i, start, end };
+      const x = i % cols;
+      const y = Math.floor(i / cols);
+      
+      // Padrão de revelação: Fluxo orgânico do centro e de cima para baixo
+      const centerX = cols / 2;
+      const centerY = rows / 2;
+      const distFromCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) / (cols / 1.5);
+      const verticalPos = y / rows;
+      
+      // Sincronizado com o heroContentOpacity (que vai de 0.4 a 0.6)
+      // Queremos que comece um pouco antes e termine logo depois
+      const bias = (verticalPos * 0.2) + (distFromCenter * 0.1);
+      const start = 0.25 + bias + Math.random() * 0.2; 
+      const end = Math.min(start + 0.15, 0.75); // Garante que tudo esteja branco perto de 0.75
+      
+      return { id: i, start, end, x, y };
     });
-  }, []);
+  }, [cols, rows]);
 
   return (
     <div
@@ -865,9 +882,22 @@ const GridOverlay = ({ scrollYProgress }: { scrollYProgress: any }) => {
 };
 
 const Square = ({ scrollYProgress, start, end }: { scrollYProgress: any, start: number, end: number }) => {
+  // Transformações para tornar a entrada do quadrado mais dinâmica
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  // Adicionado will-change para melhor performance de renderização
-  return <motion.div style={{ opacity, willChange: "opacity" }} className="bg-white w-full h-full scale-[1.05]" />;
+  const scale = useTransform(scrollYProgress, [start, Math.min(end + 0.05, 1)], [0.5, 1.05]);
+  const rotate = useTransform(scrollYProgress, [start, end], [12, 0]);
+  
+  return (
+    <motion.div 
+      style={{ 
+        opacity, 
+        scale,
+        rotate,
+        willChange: "opacity, transform" 
+      }} 
+      className="bg-white w-full h-full border-[0.5px] border-zinc-100/10" 
+    />
+  );
 };
 
 
