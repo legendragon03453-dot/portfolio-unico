@@ -370,8 +370,7 @@ export default function App() {
     mouseY.set(y);
   };
 
-  return (
-    <div id="home" className="bg-zinc-900 font-sans overflow-x-hidden">
+    <div id="home" className="bg-zinc-900 font-sans">
       <FontStyle />
 
       {/* A MÁGICA CONTINUA: 200vh exatos para dar o timing perfeito do scroll */}
