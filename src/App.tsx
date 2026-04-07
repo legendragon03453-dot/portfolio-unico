@@ -2,11 +2,8 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 
-// Injetando a fonte customizada e a CURA DO STICKY globalmente
 const FontStyle = () => (
   <style dangerouslySetInnerHTML={{__html: `
-    /* --- A CURA DEFINITIVA PARA O STICKY --- */
-    /* Isso força o Vite a não matar o seu scroll */
     html, body, #root {
       overflow-x: clip !important;
       overflow-y: visible !important;
@@ -339,9 +336,10 @@ export default function App() {
   const [lang, setLang] = useState('pt');
   const t = translations[lang];
 
+  // CORREÇÃO APLICADA AQUI: "end end" em vez de "end start"
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end end"]
   });
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
@@ -870,15 +868,16 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
   );
 };
 
+// CORREÇÃO APLICADA AQUI: Ajuste do timing para a tela pintar de branco BEM ANTES do portfólio subir
 const GridOverlay = ({ scrollYProgress }) => {
   const cols = 20;
   const rows = 15;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Ajuste para garantir que a tela fique branca e a animação acompanhe a Hero parada
-      const start = 0.5 + Math.random() * 0.3; 
-      const end = Math.min(start + 0.15, 0.98); 
+      // Começa muito antes (aos 20% do scroll) e termina no máximo aos 80%
+      const start = 0.2 + Math.random() * 0.4; 
+      const end = Math.min(start + 0.15, 0.80); 
       return { id: i, start, end };
     });
   }, []);
