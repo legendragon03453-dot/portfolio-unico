@@ -331,7 +331,6 @@ export default function App() {
   const [lang, setLang] = useState('pt');
   const t = translations[lang];
 
-  // A MÁGICA COMEÇA AQUI: "end start" obriga a tela a travar e esperar o branco
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -370,10 +369,11 @@ export default function App() {
     mouseY.set(y);
   };
 
+  return (
+    // ATENÇÃO: div principal SEM overflow-x-hidden
     <div id="home" className="bg-zinc-900 font-sans">
       <FontStyle />
 
-      {/* A MÁGICA CONTINUA: 200vh exatos para dar o timing perfeito do scroll */}
       <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
           
@@ -460,12 +460,10 @@ export default function App() {
             </motion.div>
           </motion.div>
 
-          {/* GRID COM Z-INDEX GIGANTE PARA COBRIR TUDO COM BRANCO */}
           <GridOverlay scrollYProgress={scrollYProgress} />
         </div>
       </div>
 
-      {/* O VILÃO MORTO: Removido o '-mt-[100vh]' e ajustado o z-index para 50 para o portfólio nascer DEPOIS dos quadrados brancos */}
       <section id="portfolio" className="relative z-50 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
           <h2 
@@ -533,14 +531,12 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- TERCEIRA DOBRA (ÓRBITA 3D E TRANSIÇÃO) --- */}
       <section id="influencers" ref={sec3Ref} className="relative w-full h-[150vh]">
         <div 
           className="sticky top-0 left-0 w-full h-screen bg-zinc-950 overflow-hidden"
           onMouseMove={handleMouseMove}
           style={{ perspective: "1500px" }}
         >
-          {/* Texto Absoluto no Topo */}
           <motion.div 
             style={{ opacity: sec3TextOpacity }}
             className="absolute top-16 sm:top-20 md:top-24 left-0 right-0 z-30 text-center px-4 w-full pointer-events-none"
@@ -554,7 +550,6 @@ export default function App() {
              </h2>
           </motion.div>
 
-          {/* Container Global 3D */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
             <motion.div 
                className="relative flex items-center justify-center"
@@ -564,8 +559,6 @@ export default function App() {
                  transformStyle: "preserve-3d" 
                }}
             >
-
-               {/* Imagem Central */}
                <motion.div 
                   className="absolute z-50 w-20 h-20 sm:w-24 sm:h-24 md:w-40 md:h-40 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.15)] ring-4 ring-white/10 bg-zinc-800 flex items-center justify-center"
                   style={{ 
@@ -582,7 +575,6 @@ export default function App() {
                   />
                </motion.div>
 
-               {/* Anéis de Saturno */}
                <SaturnRing radius={200} duration={30} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(0, 3)} />
                <SaturnRing radius={350} duration={45} direction={-1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(3, 6)} />
                <SaturnRing radius={500} duration={60} direction={1} invX={invRotateX} invY={invRotateY} scale={ringsScale} images={ORBIT_IMAGES.slice(6, 9)} />
@@ -594,7 +586,6 @@ export default function App() {
             </motion.div>
           </div>
 
-          {/* OVERLAYS DE TRANSIÇÃO (Círculo Branco) */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-40">
             <motion.div
                className="w-32 h-32 bg-white rounded-full"
@@ -605,10 +596,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- QUARTA DOBRA (SERVIÇOS) --- */}
       <section id="servicos" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-center text-zinc-900 pt-24 pb-12 px-4 sm:px-[20px] md:px-10">
         
-        {/* Cabeçalho da Sessão 4 */}
         <h2 
           className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-bold text-left mb-8 sm:mb-12"
           style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
@@ -616,12 +605,10 @@ export default function App() {
           {t.sec4Title}
         </h2>
         
-        {/* Componente de Acordeão com os Cards de Serviço */}
         <div className="w-full">
           <ServicesAccordion data={t.servicesData} />
         </div>
 
-        {/* Frase de Impacto Final da Sessão 4 */}
         <div className="w-full mt-12 sm:mt-16 md:mt-24 flex justify-center">
           <h3 
             className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold tracking-widest text-center uppercase max-w-5xl leading-snug text-black"
@@ -633,10 +620,8 @@ export default function App() {
         
       </section>
 
-      {/* --- QUINTA DOBRA (BIO & ESTATÍSTICAS) --- */}
       <section id="bio" className="relative z-[150] w-full bg-white flex flex-col items-center justify-start text-zinc-900 pt-8 pb-24 px-4 sm:px-[20px] md:px-10">
         
-        {/* Grid de Estatísticas (Preenchimento nulo, Traçado preto) */}
         <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16">
           {t.stats.map((stat, i) => (
             <div 
@@ -656,20 +641,16 @@ export default function App() {
           ))}
         </div>
 
-        {/* Layout do Fundador (Filippo) */}
         <div className="w-full max-w-7xl border border-black rounded-[10px] flex flex-col lg:flex-row overflow-hidden bg-transparent">
           
-          {/* Lado Esquerdo: Imagem com Overlay */}
           <div className="relative w-full lg:w-[45%] h-[350px] sm:h-[450px] md:h-[500px] lg:h-auto border-b lg:border-b-0 lg:border-r border-black">
             <img 
               src="https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/project.webp" 
               alt="Filippo Rodrigues" 
               className="w-full h-full object-cover object-center"
             />
-            {/* Gradiente escuro para garantir leitura do texto */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
             
-            {/* Textos sobre a imagem */}
             <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 text-white">
               <h4 
                 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2 tracking-widest uppercase"
@@ -683,7 +664,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Lado Direito: Textos e CTA */}
           <div className="w-full lg:w-[55%] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-transparent">
             <h3 
               className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8 uppercase tracking-widest text-black"
@@ -698,7 +678,6 @@ export default function App() {
               <p>{t.bioP3}</p>
             </div>
 
-            {/* Botão Clean com Seta Animada */}
             <button className="group flex items-center justify-between w-fit gap-4 sm:gap-6 px-6 py-3 sm:px-8 sm:py-4 border border-black rounded-full hover:bg-black hover:text-white transition-all duration-300">
               <span className="text-[10px] sm:text-xs md:text-sm uppercase tracking-widest font-bold">
                 {t.bioBtn}
@@ -717,11 +696,9 @@ export default function App() {
         </div>
       </section>
 
-      {/* --- SEXTA DOBRA (FOOTER / CONTATO) --- */}
       <footer id="orcamento" className="relative z-[200] w-full bg-black text-white flex flex-col items-center justify-center pt-24 sm:pt-32 pb-12 px-4 sm:px-[20px] md:px-10">
         
         <div className="flex flex-col items-center text-center max-w-6xl mx-auto mb-16 sm:mb-24 md:mb-32">
-          {/* Manchete Final com Tamanho Reduzido e Fonte Hypik no Destaque */}
           <h2 
             className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-snug mb-8 sm:mb-10 md:mb-14"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
@@ -738,13 +715,11 @@ export default function App() {
             </span>
           </h2>
           
-          {/* Botão idêntico ao da Head (tamanho padrão shiny-btn) */}
           <button className="shiny-btn">
             <span>{t.sec6Btn}</span>
           </button>
         </div>
 
-        {/* Rodapé Técnico */}
         <div className="w-full max-w-7xl flex flex-col md:flex-row items-center justify-between border-t border-white/20 pt-8 gap-6 md:gap-0">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 text-[9px] sm:text-[10px] md:text-xs tracking-widest uppercase font-semibold text-zinc-400">
             {t.sec6Links.map((link, i) => (
@@ -764,10 +739,6 @@ export default function App() {
   );
 }
 
-// ==========================================
-// COMPONENTES AUXILIARES DAS SESSÕES
-// ==========================================
-
 const ServicesAccordion = ({ data }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -782,7 +753,6 @@ const ServicesAccordion = ({ data }) => {
             onMouseEnter={() => setActiveIndex(index)}
             onClick={() => setActiveIndex(index)}
             animate={{
-              // Expande brutalmente o flex-grow do card ativo
               flex: isActive ? 5 : 1
             }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -790,7 +760,6 @@ const ServicesAccordion = ({ data }) => {
           >
             <div className="relative w-full h-full z-10 flex">
                
-               {/* --- ESTADO INATIVO: Texto Rotacionado --- */}
                <motion.div 
                  initial={false}
                  animate={{ opacity: isActive ? 0 : 1 }}
@@ -810,13 +779,11 @@ const ServicesAccordion = ({ data }) => {
                  </h4>
                </motion.div>
 
-               {/* --- ESTADO ATIVO: Conteúdo Expandido --- */}
                <motion.div
                  initial={false}
                  animate={{ opacity: isActive ? 1 : 0 }}
                  className="w-full h-full flex flex-col md:flex-row p-4 sm:p-6 md:p-10 gap-4 sm:gap-6 md:gap-10"
                >
-                  {/* Lado Esquerdo: Textos e Lista */}
                   <div className="flex-1 flex flex-col justify-between overflow-hidden min-w-[150px] sm:min-w-[200px]">
                     <div>
                       <h4 
@@ -846,7 +813,6 @@ const ServicesAccordion = ({ data }) => {
                     </div>
                   </div>
 
-                  {/* Lado Direito: Vídeo Demonstrativo com Borda Preta */}
                   <div className="flex-1 w-full h-32 sm:h-48 md:h-full rounded-lg overflow-hidden border border-black flex-shrink-0">
                      <video 
                        src={item.video} 
@@ -909,7 +875,6 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
   );
 };
 
-// A MATEMÁTICA CORRETA DA TRANSIÇÃO
 const GridOverlay = ({ scrollYProgress }) => {
   const cols = 20;
   const rows = 15;
