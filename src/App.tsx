@@ -877,23 +877,32 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
 
 // Grid Transition Component
 const GridOverlay = ({ scrollYProgress }) => {
-  const cols = 12;
-  const rows = 8;
+  const cols = 40;
+  const rows = 25;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Stagger based on position for a more "designed" feel
-      // Distância do centro ou diagonal
-      const distance = (col + row) / (cols + rows);
-      const start = 0.2 + distance * 0.4 + Math.random() * 0.1;
-      const end = Math.min(start + 0.2, 0.95);
+      // Calculate position-based progress for a staggered reveal
+      // Mixing diagonal, center-out, and random factors for a rich transition
+      const diagonal = (col / cols + row / rows) / 2;
+      const distanceFromCenter = Math.sqrt(
+        Math.pow((col / cols) - 0.5, 2) + 
+        Math.pow((row / rows) - 0.5, 2)
+      ) / Math.sqrt(0.5);
+      
+      // Combine factors for unique timing per square
+      const combinedFactor = (diagonal * 0.4 + distanceFromCenter * 0.3 + Math.random() * 0.3);
+      
+      // Start filling between 0.3 and 0.8 scroll progress
+      const start = 0.3 + combinedFactor * 0.5;
+      const end = Math.min(start + 0.15, 1.0);
       
       return { id: i, start, end };
     });
-  }, []);
+  }, [cols, rows]);
 
   return (
     <div
@@ -912,7 +921,13 @@ const GridOverlay = ({ scrollYProgress }) => {
 
 const Square = ({ scrollYProgress, start, end }) => {
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  return <motion.div style={{ opacity, willChange: "opacity" }} className="bg-white w-full h-full scale-[1.05]" />;
+  
+  return (
+    <motion.div 
+      style={{ opacity, willChange: "opacity" }} 
+      className="bg-white w-full h-full scale-[1.1]" 
+    />
+  );
 };
 
 const SlideTabs = ({ tabs }) => {
