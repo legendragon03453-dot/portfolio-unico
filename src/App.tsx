@@ -402,7 +402,7 @@ export default function App() {
             src="https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/UNCI%20BG%20FDS.webm"
           />
 
-          <header className="relative z-20 w-full pt-6 md:pt-10 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+          <header className="relative z-10 w-full pt-6 md:pt-10 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
             <div className="flex md:hidden w-full justify-between items-start pointer-events-none">
               <p className="text-[8px] tracking-widest font-light uppercase text-white/60 text-left max-w-[120px] leading-relaxed">
                 {t.heroTop}
@@ -455,7 +455,7 @@ export default function App() {
             </div>
           </motion.main>
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-20 pointer-events-none w-full flex justify-center">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-10 pointer-events-none w-full flex justify-center">
             <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
               {t.footer}
             </p>
@@ -463,7 +463,7 @@ export default function App() {
 
           <motion.div 
             style={{ opacity: indicatorOpacity }}
-            className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
+            className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center pointer-events-none"
           >
             <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
               {t.scroll}
@@ -887,10 +887,10 @@ const GridOverlay = ({ scrollYProgress }) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Fast reveal completing by 30% of the total sticky duration
+      // Much more aggressive timing to ensure 100% white by 0.15
       const randomFactor = Math.random();
-      const start = randomFactor * 0.1; // Start almost immediately
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.3); // All reach 100% white by 0.3
+      const start = randomFactor * 0.05; // Start immediately
+      const end = Math.min(start + 0.05 + Math.random() * 0.05, 0.15); // COMPLETE white by 0.15
       
       return { id: i, start, end };
     });
@@ -898,7 +898,7 @@ const GridOverlay = ({ scrollYProgress }) => {
 
   return (
     <div
-      className="absolute inset-0 z-[100] pointer-events-none grid"
+      className="absolute inset-0 z-[9999] pointer-events-none grid"
       style={{
         gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
