@@ -341,17 +341,19 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Color inversion logic - affecting background/noise
+  // Color inversion logic - affecting everything in the Hero
   const invertValue = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
   const filter = useTransform(invertValue, v => `invert(${v})`);
   
   // Opacities for non-critical elements (Navigation, Buttons, Subtexts, Background)
   const secondaryContentOpacity = useTransform(scrollYProgress, [0.3, 0.45], [1, 0]);
-  const backgroundElementsOpacity = useTransform(scrollYProgress, [0.4, 0.55], [1, 0]);
+  const backgroundElementsOpacity = useTransform(scrollYProgress, [0.2, 0.45], [1, 0]);
   
   // UNICO Text Zoom logic - MUST be 1.0 at start (0)
-  const unicoScale = useTransform(scrollYProgress, [0.5, 0.8], [1, 80]);
+  const unicoScale = useTransform(scrollYProgress, [0.45, 0.8], [1, 80]);
   const unicoOpacity = useTransform(scrollYProgress, [0.75, 0.85], [1, 0]);
+  
+  // NEW: Transition to BLACK instead of white
   const solidColorOpacity = useTransform(scrollYProgress, [0.75, 0.85], [0, 1]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
@@ -396,14 +398,16 @@ export default function App() {
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden z-10 flex flex-col">
           {/* Elements that INVERT and FADE OUT */}
           <motion.div 
-            style={{ filter, opacity: backgroundElementsOpacity }}
-            className="absolute inset-0 z-0"
+            style={{ filter }}
+            className="absolute inset-0 z-0 flex flex-col"
           >
+            {/* Background elements */}
             <motion.div 
-              style={{ backgroundImage: "url('https://rtl4013zxp.easybuilder.com.br/wp-content/uploads/2025/06/ruido-animado.gif')" }}
+              style={{ opacity: backgroundElementsOpacity, backgroundImage: "url('https://rtl4013zxp.easybuilder.com.br/wp-content/uploads/2025/06/ruido-animado.gif')" }}
               className="absolute inset-0 z-50 w-full h-full pointer-events-none mix-blend-plus-lighter opacity-20"
             />
-            <video
+            <motion.video
+              style={{ opacity: backgroundElementsOpacity }}
               autoPlay
               loop
               muted
@@ -411,108 +415,98 @@ export default function App() {
               className="absolute top-0 left-0 w-full h-full object-cover z-0"
               src="https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/UNCI%20BG%20FDS.webm"
             />
-          </motion.div>
 
-          {/* Header & Interface that also FADES OUT */}
-          <motion.header 
-            style={{ opacity: secondaryContentOpacity }}
-            className="relative z-20 w-full pt-6 md:pt-10 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0"
-          >
-            <div className="flex md:hidden w-full justify-between items-start pointer-events-none">
-              <p className="text-[8px] tracking-widest font-light uppercase text-white/60 text-left max-w-[120px] leading-relaxed">
-                {t.heroTop}
-              </p>
-              <LanguageToggle lang={lang} setLang={setLang} />
-            </div>
-
-            <div className="hidden md:block w-1/3 pointer-events-none">
-              <p className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/60 text-left max-w-[160px] leading-relaxed">
-                {t.heroTop}
-              </p>
-            </div>
-
-            <div className="flex justify-center w-full md:w-1/3">
-              <SlideTabs tabs={t.nav} />
-            </div>
-
-            <div className="hidden md:flex w-1/3 justify-end items-center pointer-events-none">
-              <LanguageToggle lang={lang} setLang={setLang} />
-            </div>
-          </motion.header>
-
-          {/* HERO MAIN - UNICO ZOOM BOX */}
-          <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
-            <motion.div 
-              style={{ scale: unicoScale, opacity: unicoOpacity }}
-              className="flex flex-col items-center justify-center text-center px-4"
+            {/* Header & Interface */}
+            <motion.header 
+              style={{ opacity: secondaryContentOpacity }}
+              className="relative z-20 w-full pt-6 md:pt-10 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0"
             >
-              <h1 
-                className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[13rem] leading-normal p-4 md:p-10 whitespace-nowrap tracking-wider text-white opacity-90"
-                style={{ fontFamily: "'Hypik', sans-serif" }}
-              >
-                &nbsp;UNICO&nbsp;
-              </h1>
-              
-              <motion.div 
-                style={{ opacity: secondaryContentOpacity }}
-                className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-16 w-full -mt-[30px] sm:-mt-[50px] md:-mt-[90px] lg:-mt-[120px] text-[8px] sm:text-[10px] md:text-sm lg:text-base tracking-[0.2em] text-white/80 uppercase font-light"
-              >
-                <span>{t.heroSub1}</span>
-                <span>{t.heroSub2}</span>
-                <span>{t.heroSub3}</span>
-              </motion.div>
+              <div className="flex md:hidden w-full justify-between items-start pointer-events-none">
+                <p className="text-[8px] tracking-widest font-light uppercase text-white/60 text-left max-w-[120px] leading-relaxed">
+                  {t.heroTop}
+                </p>
+                <LanguageToggle lang={lang} setLang={setLang} />
+              </div>
 
+              <div className="hidden md:block w-1/3 pointer-events-none">
+                <p className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/60 text-left max-w-[160px] leading-relaxed">
+                  {t.heroTop}
+                </p>
+              </div>
+
+              <div className="flex justify-center w-full md:w-1/3">
+                <SlideTabs tabs={t.nav} />
+              </div>
+
+              <div className="hidden md:flex w-1/3 justify-end items-center pointer-events-none">
+                <LanguageToggle lang={lang} setLang={setLang} />
+              </div>
+            </motion.header>
+
+            {/* HERO MAIN - UNICO ZOOM BOX (inside filter to invert) */}
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
               <motion.div 
-                style={{ opacity: secondaryContentOpacity }}
-                className="flex justify-center mt-10 sm:mt-12 md:mt-16"
+                style={{ scale: unicoScale, opacity: unicoOpacity }}
+                className="flex flex-col items-center justify-center text-center px-4"
               >
-                <button 
-                  onClick={() => document.querySelector('#orcamento')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="shiny-btn shiny-btn-lg pointer-events-auto"
+                <h1 
+                  className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[13rem] leading-normal p-4 md:p-10 whitespace-nowrap tracking-wider text-white opacity-90"
+                  style={{ fontFamily: "'Hypik', sans-serif" }}
                 >
-                  <span>{t.sec2BtnQuote}</span>
-                </button>
+                  &nbsp;UNICO&nbsp;
+                </h1>
+                
+                <motion.div 
+                  style={{ opacity: secondaryContentOpacity }}
+                  className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-16 w-full -mt-[30px] sm:-mt-[50px] md:-mt-[90px] lg:-mt-[120px] text-[8px] sm:text-[10px] md:text-sm lg:text-base tracking-[0.2em] text-white/80 uppercase font-light"
+                >
+                  <span>{t.heroSub1}</span>
+                  <span>{t.heroSub2}</span>
+                  <span>{t.heroSub3}</span>
+                </motion.div>
+
+                <motion.div 
+                  style={{ opacity: secondaryContentOpacity }}
+                  className="flex justify-center mt-10 sm:mt-12 md:mt-16"
+                >
+                  <button 
+                    onClick={() => document.querySelector('#orcamento')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="shiny-btn shiny-btn-lg pointer-events-auto"
+                  >
+                    <span>{t.sec2BtnQuote}</span>
+                  </button>
+                </motion.div>
               </motion.div>
+            </div>
+
+            <motion.div 
+              style={{ opacity: secondaryContentOpacity }}
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-10 pointer-events-none w-full flex justify-center text-center px-4"
+            >
+              <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase">
+                {t.footer}
+              </p>
             </motion.div>
-          </div>
-
-          <motion.div 
-            style={{ opacity: secondaryContentOpacity }}
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-10 pointer-events-none w-full flex justify-center text-center px-4"
-          >
-            <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase">
-              {t.footer}
-            </p>
           </motion.div>
 
-          <motion.div 
-            style={{ opacity: secondaryContentOpacity }}
-            className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center pointer-events-none"
-          >
-            <span className="text-[9px] md:text-[10px] tracking-widest font-light uppercase text-white/50 mb-2">
-              {t.scroll}
-            </span>
-            <div className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent" />
-          </motion.div>
-
-          {/* Solid White Overlay remains WHITE (outside filter) */}
+          {/* Solid Black Overlay (outside filter) */}
           <motion.div 
             style={{ opacity: solidColorOpacity }}
-            className="absolute inset-0 z-[10000] bg-white pointer-events-none"
+            className="absolute inset-0 z-[10000] bg-black pointer-events-none"
           />
         </div>
       </div>
 
       {/* DOBRA 2 - PORTFÓLIO */}
-      <section id="portfolio" className="relative z-20 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
+      <section id="portfolio" className="relative z-20 w-full min-h-screen bg-black flex flex-col items-start justify-start text-white py-24 pb-12">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
           <h2 
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
           >
-            {t.sec2Title1} <span className="font-bold tracking-wider">{t.sec2Title2}</span>
+            {t.sec2Title1} <span className="font-bold tracking-wider text-white">{t.sec2Title2}</span>
           </h2>
-          <span className="text-[9px] sm:text-[10px] md:text-xs tracking-widest font-light uppercase text-zinc-400 md:pb-3">
+          <span className="text-[9px] sm:text-[10px] md:text-xs tracking-widest font-light uppercase text-zinc-500 md:pb-3">
             {"<BY FILIPPO>"}
           </span>
         </div>
@@ -561,10 +555,10 @@ export default function App() {
         </div>
 
         <div className="mt-12 sm:mt-16 w-full flex items-center justify-center gap-6">
-          <button className="text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest font-light hover:opacity-50 transition-opacity duration-300">
+          <button className="text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest font-light text-zinc-400 hover:text-white transition-opacity duration-300">
             {t.sec2Btn}
           </button>
-          <div className="w-[1px] h-6 bg-zinc-300"></div>
+          <div className="w-[1px] h-6 bg-zinc-800"></div>
           <button className="shiny-btn">
             <span>{t.sec2BtnQuote}</span>
           </button>
