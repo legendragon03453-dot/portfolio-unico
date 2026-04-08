@@ -385,7 +385,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[200vh]">
+      <div ref={containerRef} className="relative w-full h-[250vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
           
           <div 
@@ -887,10 +887,10 @@ const GridOverlay = ({ scrollYProgress }) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Random but ensuring full white by 0.8 to bridge reveal cleanly
+      // Random but ensuring full white by 0.7 to bridge reveal cleanly
       const randomFactor = Math.random();
-      const start = randomFactor * 0.5; // Start earlier
-      const end = Math.min(start + 0.2 + Math.random() * 0.1, 0.8); // Finish all by 0.8
+      const start = randomFactor * 0.4; // Start even earlier
+      const end = Math.min(start + 0.2 + Math.random() * 0.1, 0.7); // Finish all by 0.7
       
       return { id: i, start, end };
     });
@@ -917,7 +917,7 @@ const Square = ({ scrollYProgress, start, end }) => {
   return (
     <motion.div 
       style={{ opacity, willChange: "opacity" }} 
-      className="bg-white w-full h-full scale-[1.1]" 
+      className="bg-white w-full h-full scale-[1.2]" 
     />
   );
 };
