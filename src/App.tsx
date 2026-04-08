@@ -342,16 +342,16 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Solid white layer progress - decisive completion halfway through the scroll
-  const solidColorOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
+  // Ultra-fast solid white transition: reach 100% white by 25% of total scroll
+  const solidColorOpacity = useTransform(scrollYProgress, [0.15, 0.25], [0, 1]);
 
   // Fade out hero content matches the grid speed
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const heroContentScale = 1; // Keep it static as requested before
   
-  // Background elements fade out as grid completes
-  const noiseOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0.2, 0]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0.9, 0]);
+  // Background elements fade out very early to prep for solid white
+  const noiseOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0.9, 0]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -391,7 +391,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[300vh]">
+      <div ref={containerRef} className="relative w-full h-[500vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
           <motion.div 
@@ -894,9 +894,9 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Very fast staggered transition: all finish by 50% scroll
-      const start = Math.random() * 0.3; 
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.5); 
+      // Extremely fast filling: all finish by 25% scroll
+      const start = Math.random() * 0.15; 
+      const end = Math.min(start + 0.05 + Math.random() * 0.05, 0.25); 
       return { id: i, start, end };
     });
   }, [cols, rows]);
