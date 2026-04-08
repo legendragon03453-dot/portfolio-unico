@@ -342,16 +342,16 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Solid white layer progress - fast and decisive
-  const solidColorOpacity = useTransform(scrollYProgress, [0.2, 0.35], [0, 1]);
+  // Solid white layer progress - decisive completion halfway through the scroll
+  const solidColorOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
 
   // Fade out hero content matches the grid speed
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const heroContentScale = 1; // Keep it static as requested before
   
-  // Background elements fade out exactly when the screen becomes white (by 0.8)
-  const noiseOpacity = useTransform(scrollYProgress, [0.5, 0.8], [0.2, 0]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0.5, 0.8], [0.9, 0]);
+  // Background elements fade out as grid completes
+  const noiseOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0.9, 0]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -391,7 +391,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[250vh]">
+      <div ref={containerRef} className="relative w-full h-[300vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
           <motion.div 
@@ -889,14 +889,14 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
 
 // Grid Transition Component
 const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
-  const cols = 40; 
-  const rows = 24;
+  const cols = 50; 
+  const rows = 30;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Faster filling process: finish all squares by 30% scroll
-      const start = Math.random() * 0.15; // Start staggered across first 15%
-      const end = Math.min(start + 0.05 + Math.random() * 0.1, 0.3); // ALL finish by 30%
+      // Very fast staggered transition: all finish by 50% scroll
+      const start = Math.random() * 0.3; 
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.5); 
       return { id: i, start, end };
     });
   }, [cols, rows]);
