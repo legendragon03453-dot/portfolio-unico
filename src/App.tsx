@@ -342,19 +342,19 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // NEW: Inversion effect - Black becomes White, White becomes Black
-  const inversionOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
+  // NEW: Inversion effect - Black becomes White, White becomes Black (Fast)
+  const inversionOpacity = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
 
-  // Grid and Solid White happen after inversion
-  const solidColorOpacity = useTransform(scrollYProgress, [0.6, 0.75], [0, 1]);
+  // Grid and Solid White happen after inversion (Fast)
+  const solidColorOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
 
   // Content stays visible but inverted until covered by white squares
-  const heroContentOpacity = useTransform(scrollYProgress, [0.7, 0.8], [1, 0]);
+  const heroContentOpacity = useTransform(scrollYProgress, [0.5, 0.6], [1, 0]);
   const heroContentScale = 1; 
   
   // Background elements fade out late
-  const noiseOpacity = useTransform(scrollYProgress, [0.7, 0.8], [0.2, 0]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0.7, 0.8], [0.9, 0]);
+  const noiseOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0.9, 0]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -394,7 +394,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[300vh] lg:h-[500vh]">
+      <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
           {/* Inversion Layer */}
@@ -903,9 +903,9 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Squares appear after inversion: 0.4 to 0.7
-      const start = 0.4 + Math.random() * 0.2; 
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.75); 
+      // Squares appear after inversion: 0.25 to 0.5
+      const start = 0.25 + Math.random() * 0.15; 
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.55); 
       return { id: i, start, end };
     });
   }, [cols, rows]);
