@@ -344,7 +344,7 @@ export default function App() {
 
   // Fade out hero content later so the squares cover it
   // Fade out hero content faster to match the accelerated grid
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const heroContentScale = 1; // Keep it static as requested before
   
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
@@ -385,7 +385,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[300vh]">
+      <div ref={containerRef} className="relative w-full h-[400vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
           
           <div 
@@ -879,18 +879,18 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
 
 // Grid Transition Component
 const GridOverlay = ({ scrollYProgress }) => {
-  const cols = 20;
-  const rows = 12;
+  const cols = 40;
+  const rows = 24;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Fast reveal completing by 35% of the total sticky duration
+      // Fast reveal completing by 30% of the total sticky duration
       const randomFactor = Math.random();
-      const start = randomFactor * 0.15; // Start almost immediately
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.35); // All reach 100% white by 0.35
+      const start = randomFactor * 0.1; // Start almost immediately
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.3); // All reach 100% white by 0.3
       
       return { id: i, start, end };
     });
@@ -915,10 +915,12 @@ const Square = ({ scrollYProgress, start, end }) => {
   const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
   
   return (
-    <motion.div 
-      style={{ opacity, willChange: "opacity" }} 
-      className="bg-white w-full h-full scale-[1.2]" 
-    />
+    <div className="relative w-full h-full">
+      <motion.div 
+        style={{ opacity, willChange: "opacity" }} 
+        className="bg-white absolute inset-[-1px]" 
+      />
+    </div>
   );
 };
 
