@@ -342,6 +342,9 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
+  // Solid white layer progress to "seal" the grid at the end
+  const solidColorOpacity = useTransform(scrollYProgress, [0.85, 0.95], [0, 1]);
+
   // Fade out hero content later so the squares cover it
   // Fade out hero content faster to match the accelerated grid
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
@@ -386,7 +389,7 @@ export default function App() {
 
       {/* DOBRA 1 - HERO */}
       <div ref={containerRef} className="relative w-full h-[400vh]">
-        <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
+        <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
           <div 
             className="absolute inset-0 z-50 w-full h-full pointer-events-none opacity-20 mix-blend-plus-lighter"
@@ -475,7 +478,7 @@ export default function App() {
             </motion.div>
           </motion.div>
 
-          <GridOverlay scrollYProgress={scrollYProgress} />
+          <GridOverlay scrollYProgress={scrollYProgress} solidColorOpacity={solidColorOpacity} />
         </div>
       </div>
 
@@ -878,36 +881,43 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
 };
 
 // Grid Transition Component
-const GridOverlay = ({ scrollYProgress }) => {
-  const cols = 40;
-  const rows = 24;
+const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
+  const cols = 30; // Slightly fewer columns for better performance
+  const rows = 18;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Much more aggressive timing to ensure 100% white by 0.15
+      // Spread across the scroll: 0 to 0.9
       const randomFactor = Math.random();
-      const start = randomFactor * 0.05; // Start immediately
-      const end = Math.min(start + 0.05 + Math.random() * 0.05, 0.15); // COMPLETE white by 0.15
+      const start = randomFactor * 0.7; // Start staggered across first 70%
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.9); // Finish by 90%
       
       return { id: i, start, end };
     });
   }, [cols, rows]);
 
   return (
-    <div
-      className="absolute inset-0 z-[9999] pointer-events-none grid"
-      style={{
-        gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-        gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
-      }}
-    >
-      {squares.map((sq) => (
-        <Square key={sq.id} scrollYProgress={scrollYProgress} start={sq.start} end={sq.end} />
-      ))}
-    </div>
+    <>
+      <div
+        className="absolute inset-0 z-[9999] pointer-events-none grid"
+        style={{
+          gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
+        }}
+      >
+        {squares.map((sq) => (
+          <Square key={sq.id} scrollYProgress={scrollYProgress} start={sq.start} end={sq.end} />
+        ))}
+      </div>
+      {/* Solid white layer to seal all gaps and fix the "quadriculado" look */}
+      <motion.div 
+        style={{ opacity: solidColorOpacity }}
+        className="absolute inset-0 z-[10000] bg-white pointer-events-none"
+      />
+    </>
   );
 };
 
