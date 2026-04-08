@@ -342,16 +342,15 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Ultra-fast solid white transition: reach 100% white by 25% of total scroll
-  const solidColorOpacity = useTransform(scrollYProgress, [0.15, 0.25], [0, 1]);
-
-  // Fade out hero content matches the grid speed
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroContentScale = 1; // Keep it static as requested before
+  // Color inversion logic
+  const invertValue = useTransform(scrollYProgress, [0, 0.45], [0, 1]);
+  const filter = useTransform(invertValue, v => `invert(${v})`);
   
-  // Background elements fade out very early to prep for solid white
-  const noiseOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0.2, 0]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0.9, 0]);
+  // Fade out logic for background elements
+  const noiseOpacity = useTransform(scrollYProgress, [0.35, 0.5], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.35, 0.5], [0.9, 0]);
+  const heroContentOpacity = useTransform(scrollYProgress, [0.4, 0.5], [1, 0]);
+  const solidColorOpacity = useTransform(scrollYProgress, [0.45, 0.55], [0, 1]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -391,8 +390,11 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[500vh]">
-        <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
+      <div ref={containerRef} className="relative w-full h-[300vh]">
+        <motion.div 
+          style={{ filter }}
+          className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10"
+        >
           
           <motion.div 
             style={{ 
@@ -486,7 +488,7 @@ export default function App() {
           </motion.div>
 
           <GridOverlay scrollYProgress={scrollYProgress} solidColorOpacity={solidColorOpacity} />
-        </div>
+        </motion.div>
       </div>
 
       {/* DOBRA 2 - PORTFÓLIO */}
@@ -894,9 +896,9 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Extremely fast filling: all finish by 25% scroll
-      const start = Math.random() * 0.15; 
-      const end = Math.min(start + 0.05 + Math.random() * 0.05, 0.25); 
+      // Transition matches current inversion logic: finish by 50%
+      const start = Math.random() * 0.35; 
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.55); 
       return { id: i, start, end };
     });
   }, [cols, rows]);
