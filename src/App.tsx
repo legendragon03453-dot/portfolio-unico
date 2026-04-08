@@ -342,19 +342,17 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // NEW: Inversion effect - Black becomes White, White becomes Black (Fast)
-  const inversionOpacity = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
+  // Transitions synchronized to reach 100% exactly at the end of the scroll (1.0)
+  const inversionOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 1]);
+  const solidColorOpacity = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
 
-  // Grid and Solid White happen after inversion (Fast)
-  const solidColorOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
-
-  // Content stays visible but inverted until covered by white squares
-  const heroContentOpacity = useTransform(scrollYProgress, [0.5, 0.6], [1, 0]);
+  // Content fades out as the grid takes over
+  const heroContentOpacity = useTransform(scrollYProgress, [0.6, 0.8], [1, 0]);
   const heroContentScale = 1; 
   
-  // Background elements fade out late
-  const noiseOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0.2, 0]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0.9, 0]);
+  // Background elements fade out at the very end
+  const noiseOpacity = useTransform(scrollYProgress, [0.8, 1], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.8, 1], [0.9, 0]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -903,9 +901,9 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Squares appear after inversion: 0.25 to 0.5
-      const start = 0.25 + Math.random() * 0.15; 
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.55); 
+      // Squares finish exactly at 1.0
+      const start = 0.4 + Math.random() * 0.4; 
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 1); 
       return { id: i, start, end };
     });
   }, [cols, rows]);
