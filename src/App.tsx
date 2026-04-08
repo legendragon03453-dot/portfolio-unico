@@ -342,8 +342,8 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Solid white layer progress to "seal" the grid at the end
-  const solidColorOpacity = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
+  // Solid white layer matches the end of the scroll
+  const solidColorOpacity = useTransform(scrollYProgress, [0.85, 1], [0, 1]);
 
   // Fade out hero content later so the squares cover it
   // Fade out hero content faster to match the accelerated grid
@@ -388,7 +388,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[200vh]">
+      <div ref={containerRef} className="relative w-full h-[500vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
           <div 
@@ -887,8 +887,9 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      const start = Math.random() * 0.6;
-      const end = Math.min(start + 0.2 + Math.random() * 0.2, 1);
+      // Transition matches the scroll: 0 to 1
+      const start = Math.random() * 0.7; // Start staggered across first 70%
+      const end = Math.min(start + 0.2 + Math.random() * 0.1, 1); // Finish by 100%
       return { id: i, start, end };
     });
   }, [cols, rows]);
