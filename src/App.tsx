@@ -342,16 +342,19 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Ultra-fast solid white transition: reach 100% white by 25% of total scroll
-  const solidColorOpacity = useTransform(scrollYProgress, [0.15, 0.25], [0, 1]);
+  // NEW: Inversion effect - Black becomes White, White becomes Black
+  const inversionOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
 
-  // Fade out hero content matches the grid speed
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroContentScale = 1; // Keep it static as requested before
+  // Grid and Solid White happen after inversion
+  const solidColorOpacity = useTransform(scrollYProgress, [0.6, 0.75], [0, 1]);
+
+  // Content stays visible but inverted until covered by white squares
+  const heroContentOpacity = useTransform(scrollYProgress, [0.7, 0.8], [1, 0]);
+  const heroContentScale = 1; 
   
-  // Background elements fade out very early to prep for solid white
-  const noiseOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0.2, 0]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0.9, 0]);
+  // Background elements fade out late
+  const noiseOpacity = useTransform(scrollYProgress, [0.7, 0.8], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.7, 0.8], [0.9, 0]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -391,8 +394,14 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[500vh]">
+      <div ref={containerRef} className="relative w-full h-[300vh] lg:h-[500vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
+          
+          {/* Inversion Layer */}
+          <motion.div 
+            style={{ opacity: inversionOpacity }}
+            className="absolute inset-0 z-[60] bg-white pointer-events-none mix-blend-difference"
+          />
           
           <motion.div 
             style={{ 
@@ -889,14 +898,14 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
 
 // Grid Transition Component
 const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
-  const cols = 50; 
-  const rows = 30;
+  const cols = 40; 
+  const rows = 24;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Extremely fast filling: all finish by 25% scroll
-      const start = Math.random() * 0.15; 
-      const end = Math.min(start + 0.05 + Math.random() * 0.05, 0.25); 
+      // Squares appear after inversion: 0.4 to 0.7
+      const start = 0.4 + Math.random() * 0.2; 
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.75); 
       return { id: i, start, end };
     });
   }, [cols, rows]);
