@@ -342,6 +342,10 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
+  // Fade out hero content earlier to make the white grid more dramatic
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  const heroContentScale = useTransform(scrollYProgress, [0, 0.4], [1, 0.9]);
+  
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
   const sec3Ref = useRef(null);
@@ -420,7 +424,10 @@ export default function App() {
             </div>
           </header>
 
-          <main className="relative z-10 flex-1 flex flex-col items-center justify-center pointer-events-none">
+          <motion.main 
+            style={{ opacity: heroContentOpacity, scale: heroContentScale }}
+            className="relative z-10 flex-1 flex flex-col items-center justify-center pointer-events-none"
+          >
             <div className="flex flex-col items-stretch w-fit -mt-12 sm:-mt-16 md:-mt-24">
               <h1 
                 className="text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[13rem] leading-normal p-4 md:p-10 overflow-visible whitespace-nowrap tracking-wider text-white opacity-90 text-center"
@@ -444,7 +451,7 @@ export default function App() {
                 </button>
               </div>
             </div>
-          </main>
+          </motion.main>
 
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:bottom-10 z-20 pointer-events-none w-full flex justify-center">
             <p className="text-white/60 text-[8px] sm:text-[9px] md:text-xs tracking-widest font-light uppercase text-center px-4">
@@ -471,7 +478,7 @@ export default function App() {
       </div>
 
       {/* DOBRA 2 - PORTFÓLIO */}
-      <section id="portfolio" className="relative z-50 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
+      <section id="portfolio" className="relative z-20 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12 shadow-[0_-50px_100px_rgba(0,0,0,0.1)]">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
           <h2 
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal"
@@ -868,16 +875,22 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
   );
 };
 
-// CORREÇÃO APLICADA AQUI: Ajuste do timing para a tela pintar de branco BEM ANTES do portfólio subir
+// Grid Transition Component
 const GridOverlay = ({ scrollYProgress }) => {
-  const cols = 20;
-  const rows = 15;
+  const cols = 12;
+  const rows = 8;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Começa muito antes (aos 20% do scroll) e termina no máximo aos 80%
-      const start = 0.2 + Math.random() * 0.4; 
-      const end = Math.min(start + 0.15, 0.80); 
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      
+      // Stagger based on position for a more "designed" feel
+      // Distância do centro ou diagonal
+      const distance = (col + row) / (cols + rows);
+      const start = 0.2 + distance * 0.4 + Math.random() * 0.1;
+      const end = Math.min(start + 0.2, 0.95);
+      
       return { id: i, start, end };
     });
   }, []);
