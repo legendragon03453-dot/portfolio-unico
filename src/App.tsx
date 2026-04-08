@@ -342,8 +342,8 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Solid white layer progress to "seal" the grid at the end (much faster now)
-  const solidColorOpacity = useTransform(scrollYProgress, [0.25, 0.35], [0, 1]);
+  // Solid white layer progress to "seal" the grid at the end
+  const solidColorOpacity = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
 
   // Fade out hero content later so the squares cover it
   // Fade out hero content faster to match the accelerated grid
@@ -388,7 +388,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[400vh]">
+      <div ref={containerRef} className="relative w-full h-[200vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
           <div 
@@ -483,7 +483,7 @@ export default function App() {
       </div>
 
       {/* DOBRA 2 - PORTFÓLIO */}
-      <section id="portfolio" className="relative z-20 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12 shadow-[0_-50px_100px_rgba(0,0,0,0.1)]">
+      <section id="portfolio" className="relative z-20 w-full min-h-screen bg-white flex flex-col items-start justify-start text-zinc-900 py-24 pb-12">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
           <h2 
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal"
@@ -887,8 +887,8 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      const start = Math.random() * 0.15;
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.35);
+      const start = Math.random() * 0.6;
+      const end = Math.min(start + 0.2 + Math.random() * 0.2, 1);
       return { id: i, start, end };
     });
   }, [cols, rows]);
