@@ -349,6 +349,10 @@ export default function App() {
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const heroContentScale = 1; // Keep it static as requested before
   
+  // Noise and Video opacity fades out to ensure pure white at the end
+  const noiseOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0.9, 0]);
+
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
   const sec3Ref = useRef(null);
@@ -390,17 +394,21 @@ export default function App() {
       <div ref={containerRef} className="relative w-full h-[500vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
-          <div 
-            className="absolute inset-0 z-50 w-full h-full pointer-events-none opacity-20 mix-blend-plus-lighter"
-            style={{ backgroundImage: "url('https://rtl4013zxp.easybuilder.com.br/wp-content/uploads/2025/06/ruido-animado.gif')" }}
+          <motion.div 
+            style={{ 
+              opacity: noiseOpacity, 
+              backgroundImage: "url('https://rtl4013zxp.easybuilder.com.br/wp-content/uploads/2025/06/ruido-animado.gif')" 
+            }}
+            className="absolute inset-0 z-50 w-full h-full pointer-events-none mix-blend-plus-lighter"
           />
 
-          <video
+          <motion.video
+            style={{ opacity: heroBgOpacity }}
             autoPlay
             loop
             muted
             playsInline
-            className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-90"
+            className="absolute top-0 left-0 w-full h-full object-cover z-0"
             src="https://raw.githubusercontent.com/legendragon03453-dot/UNICO-SITE-FINAL/main/UNCI%20BG%20FDS.webm"
           />
 
