@@ -349,9 +349,9 @@ export default function App() {
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const heroContentScale = 1; // Keep it static as requested before
   
-  // Noise and Video opacity fades out to ensure pure white at the end
-  const noiseOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0.2, 0]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0.9, 0]);
+  // Background elements fade out exactly when the screen becomes white (by 0.8)
+  const noiseOpacity = useTransform(scrollYProgress, [0.5, 0.8], [0.2, 0]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0.5, 0.8], [0.9, 0]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -391,7 +391,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[500vh]">
+      <div ref={containerRef} className="relative w-full h-[250vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col z-10">
           
           <motion.div 
