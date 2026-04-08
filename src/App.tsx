@@ -343,9 +343,9 @@ export default function App() {
   });
 
   // Fade out hero content later so the squares cover it
-  // Fade out hero content later so the squares cover it
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const heroContentScale = 1; // Removed zoom effect as requested
+  // Fade out hero content faster to match the accelerated grid
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const heroContentScale = 1; // Keep it static as requested before
   
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -385,7 +385,7 @@ export default function App() {
       <FontStyle />
 
       {/* DOBRA 1 - HERO */}
-      <div ref={containerRef} className="relative w-full h-[250vh]">
+      <div ref={containerRef} className="relative w-full h-[300vh]">
         <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col">
           
           <div 
@@ -887,10 +887,10 @@ const GridOverlay = ({ scrollYProgress }) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Random but ensuring full white by 0.7 to bridge reveal cleanly
+      // Fast reveal completing by 35% of the total sticky duration
       const randomFactor = Math.random();
-      const start = randomFactor * 0.4; // Start even earlier
-      const end = Math.min(start + 0.2 + Math.random() * 0.1, 0.7); // Finish all by 0.7
+      const start = randomFactor * 0.15; // Start almost immediately
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.35); // All reach 100% white by 0.35
       
       return { id: i, start, end };
     });
