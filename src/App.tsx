@@ -342,8 +342,8 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Solid white layer progress to "seal" the grid at the end
-  const solidColorOpacity = useTransform(scrollYProgress, [0.85, 0.95], [0, 1]);
+  // Solid white layer progress to "seal" the grid at the end (much faster now)
+  const solidColorOpacity = useTransform(scrollYProgress, [0.25, 0.35], [0, 1]);
 
   // Fade out hero content later so the squares cover it
   // Fade out hero content faster to match the accelerated grid
@@ -882,19 +882,13 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
 
 // Grid Transition Component
 const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
-  const cols = 30; // Slightly fewer columns for better performance
-  const rows = 18;
+  const cols = 40; 
+  const rows = 24;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      
-      // Spread across the scroll: 0 to 0.9
-      const randomFactor = Math.random();
-      const start = randomFactor * 0.7; // Start staggered across first 70%
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.9); // Finish by 90%
-      
+      const start = Math.random() * 0.15;
+      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.35);
       return { id: i, start, end };
     });
   }, [cols, rows]);
@@ -912,7 +906,6 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
           <Square key={sq.id} scrollYProgress={scrollYProgress} start={sq.start} end={sq.end} />
         ))}
       </div>
-      {/* Solid white layer to seal all gaps and fix the "quadriculado" look */}
       <motion.div 
         style={{ opacity: solidColorOpacity }}
         className="absolute inset-0 z-[10000] bg-white pointer-events-none"
