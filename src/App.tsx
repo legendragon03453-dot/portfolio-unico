@@ -342,11 +342,10 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Solid white layer progress - reaches 100% by 80% scroll for a solid buffer
-  const solidColorOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0, 1]);
+  // Solid white layer progress - fast and decisive
+  const solidColorOpacity = useTransform(scrollYProgress, [0.2, 0.35], [0, 1]);
 
-  // Fade out hero content later so the squares cover it
-  // Fade out hero content faster to match the accelerated grid
+  // Fade out hero content matches the grid speed
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
   const heroContentScale = 1; // Keep it static as requested before
   
@@ -887,9 +886,9 @@ const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      // Complete filling process by 80% scroll
-      const start = Math.random() * 0.5; // Start staggered across first 50%
-      const end = Math.min(start + 0.1 + Math.random() * 0.2, 0.8); // Finish by 80%
+      // Faster filling process: finish all squares by 30% scroll
+      const start = Math.random() * 0.15; // Start staggered across first 15%
+      const end = Math.min(start + 0.05 + Math.random() * 0.1, 0.3); // ALL finish by 30%
       return { id: i, start, end };
     });
   }, [cols, rows]);
