@@ -342,9 +342,9 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Fade out hero content earlier to make the white grid more dramatic
-  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
-  const heroContentScale = useTransform(scrollYProgress, [0, 0.4], [1, 0.9]);
+  // Fade out hero content later so the squares cover it
+  const heroContentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const heroContentScale = useTransform(scrollYProgress, [0, 0.6], [1, 0.95]);
   
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -877,28 +877,19 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
 
 // Grid Transition Component
 const GridOverlay = ({ scrollYProgress }) => {
-  const cols = 40;
-  const rows = 25;
+  const cols = 20;
+  const rows = 12;
 
   const squares = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Calculate position-based progress for a staggered reveal
-      // Mixing diagonal, center-out, and random factors for a rich transition
-      const diagonal = (col / cols + row / rows) / 2;
-      const distanceFromCenter = Math.sqrt(
-        Math.pow((col / cols) - 0.5, 2) + 
-        Math.pow((row / rows) - 0.5, 2)
-      ) / Math.sqrt(0.5);
-      
-      // Combine factors for unique timing per square
-      const combinedFactor = (diagonal * 0.4 + distanceFromCenter * 0.3 + Math.random() * 0.3);
-      
-      // Start filling between 0.3 and 0.8 scroll progress
-      const start = 0.3 + combinedFactor * 0.5;
-      const end = Math.min(start + 0.15, 1.0);
+      // Random but with a slight bias towards the center-out or top-down
+      // Starting from 0 to ensure immediate feedback on scroll
+      const randomFactor = Math.random();
+      const start = randomFactor * 0.6; // Start anywhere in the first 60%
+      const end = Math.min(start + 0.2 + Math.random() * 0.2, 0.98); // Finish by 98%
       
       return { id: i, start, end };
     });
