@@ -343,8 +343,9 @@ export default function App() {
   });
 
   // Fade out hero content later so the squares cover it
+  // Fade out hero content later so the squares cover it
   const heroContentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const heroContentScale = useTransform(scrollYProgress, [0, 0.6], [1, 0.95]);
+  const heroContentScale = 1; // Removed zoom effect as requested
   
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
 
@@ -435,12 +436,13 @@ export default function App() {
               >
                 &nbsp;UNICO&nbsp;
               </h1>
-              
               <div className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-16 w-full -mt-[30px] sm:-mt-[50px] md:-mt-[90px] lg:-mt-[120px] text-[8px] sm:text-[10px] md:text-sm lg:text-base tracking-[0.2em] text-white/80 uppercase font-light">
                 <span>{t.heroSub1}</span>
                 <span>{t.heroSub2}</span>
                 <span>{t.heroSub3}</span>
               </div>
+              
+
 
               <div className="flex justify-center mt-10 sm:mt-12 md:mt-16 pointer-events-auto">
                 <button 
@@ -885,11 +887,10 @@ const GridOverlay = ({ scrollYProgress }) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       
-      // Random but with a slight bias towards the center-out or top-down
-      // Starting from 0 to ensure immediate feedback on scroll
+      // Random but ensuring full white by 0.8 to bridge reveal cleanly
       const randomFactor = Math.random();
-      const start = randomFactor * 0.6; // Start anywhere in the first 60%
-      const end = Math.min(start + 0.2 + Math.random() * 0.2, 0.98); // Finish by 98%
+      const start = randomFactor * 0.5; // Start earlier
+      const end = Math.min(start + 0.2 + Math.random() * 0.1, 0.8); // Finish all by 0.8
       
       return { id: i, start, end };
     });
