@@ -341,17 +341,17 @@ export default function App() {
     offset: ["start start", "end end"]
   });
 
-  // Color inversion logic - affecting only the background/header/subs
+  // Color inversion logic - affecting background/noise
   const invertValue = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
   const filter = useTransform(invertValue, v => `invert(${v})`);
   
-  // Fade out logic for "Everything else"
-  const backgroundElementsOpacity = useTransform(scrollYProgress, [0.1, 0.4], [1, 0]);
-  const secondaryContentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  // Opacities for non-critical elements (Navigation, Buttons, Subtexts, Background)
+  const secondaryContentOpacity = useTransform(scrollYProgress, [0.3, 0.45], [1, 0]);
+  const backgroundElementsOpacity = useTransform(scrollYProgress, [0.4, 0.55], [1, 0]);
   
-  // UNICO Zoom and Fill logic
-  const unicoScale = useTransform(scrollYProgress, [0.4, 0.8], [1, 80]);
-  const unicoOpacity = useTransform(scrollYProgress, [0, 0.1, 0.8, 0.85], [0, 1, 1, 0]);
+  // UNICO Text Zoom logic - MUST be 1.0 at start (0)
+  const unicoScale = useTransform(scrollYProgress, [0.5, 0.8], [1, 80]);
+  const unicoOpacity = useTransform(scrollYProgress, [0.75, 0.85], [1, 0]);
   const solidColorOpacity = useTransform(scrollYProgress, [0.75, 0.85], [0, 1]);
 
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
