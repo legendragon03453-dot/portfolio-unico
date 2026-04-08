@@ -486,7 +486,11 @@ export default function App() {
             </motion.div>
           </motion.div>
 
-          <GridOverlay scrollYProgress={scrollYProgress} solidColorOpacity={solidColorOpacity} />
+          {/* Solid White Overlay remains WHITE (outside filter) */}
+          <motion.div 
+            style={{ opacity: solidColorOpacity }}
+            className="absolute inset-0 z-[10000] bg-white pointer-events-none"
+          />
         </div>
       </div>
 
@@ -885,54 +889,6 @@ const SaturnRing = ({ radius, duration, images, direction, invX, invY, scale }) 
         );
       })}
     </motion.div>
-  );
-};
-
-// Grid Transition Component
-const GridOverlay = ({ scrollYProgress, solidColorOpacity }) => {
-  const cols = 50; 
-  const rows = 30;
-
-  const squares = useMemo(() => {
-    return Array.from({ length: cols * rows }).map((_, i) => {
-      // Transition matches current inversion logic: finish by 50%
-      const start = Math.random() * 0.35; 
-      const end = Math.min(start + 0.1 + Math.random() * 0.1, 0.55); 
-      return { id: i, start, end };
-    });
-  }, [cols, rows]);
-
-  return (
-    <>
-      <div
-        className="absolute inset-0 z-[9999] pointer-events-none grid"
-        style={{
-          gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-          gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
-        }}
-      >
-        {squares.map((sq) => (
-          <Square key={sq.id} scrollYProgress={scrollYProgress} start={sq.start} end={sq.end} />
-        ))}
-      </div>
-      <motion.div 
-        style={{ opacity: solidColorOpacity }}
-        className="absolute inset-0 z-[10000] bg-white pointer-events-none"
-      />
-    </>
-  );
-};
-
-const Square = ({ scrollYProgress, start, end }) => {
-  const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
-  
-  return (
-    <div className="relative w-full h-full">
-      <motion.div 
-        style={{ opacity, willChange: "opacity" }} 
-        className="bg-white absolute inset-[-1px]" 
-      />
-    </div>
   );
 };
 
