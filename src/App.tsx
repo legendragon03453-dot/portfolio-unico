@@ -389,6 +389,39 @@ export default function App() {
     mouseY.set(y);
   };
 
+  // Animation variants
+  const blurFadeIn = {
+    initial: { opacity: 0, y: 30, filter: 'blur(10px)' },
+    whileInView: { 
+      opacity: 1, 
+      y: 0, 
+      filter: 'blur(0px)',
+      transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } 
+    },
+    viewport: { once: true, margin: "-10%" }
+  };
+
+  const staggerContainer = {
+    initial: {},
+    whileInView: {
+      transition: {
+        staggerChildren: 0.15
+      }
+    },
+    viewport: { once: true, margin: "-5%" }
+  };
+
+  const scaleIn = {
+    initial: { opacity: 0, scale: 0.9, filter: 'blur(10px)' },
+    whileInView: { 
+      opacity: 1, 
+      scale: 1, 
+      filter: 'blur(0px)',
+      transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } 
+    },
+    viewport: { once: true }
+  };
+
   return (
     <div id="home" className="bg-zinc-900 font-sans">
       <FontStyle />
@@ -499,7 +532,13 @@ export default function App() {
 
       {/* DOBRA 2 - PORTFÓLIO */}
       <section id="portfolio" className="relative z-20 w-full min-h-screen bg-black flex flex-col items-start justify-start text-white py-24 pb-12">
-        <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2">
+        <motion.div 
+          variants={blurFadeIn}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-4 sm:px-[20px] md:px-10 gap-2"
+        >
           <h2 
             className="text-left text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-normal"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
@@ -509,13 +548,20 @@ export default function App() {
           <span className="text-[9px] sm:text-[10px] md:text-xs tracking-widest font-light uppercase text-zinc-500 md:pb-3">
             {"<BY FILIPPO>"}
           </span>
-        </div>
+        </motion.div>
 
-        <div className="w-full px-4 sm:px-[20px] md:px-10 mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div 
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true, margin: "-10%" }}
+          variants={staggerContainer}
+          className="w-full px-4 sm:px-[20px] md:px-10 mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6"
+        >
           {PROJECTS.map((project) => (
-            <a 
+            <motion.a 
               key={project.id} 
               href={project.link} 
+              variants={blurFadeIn}
               className="relative block w-full rounded-[10px] overflow-hidden aspect-video group cursor-pointer transition-transform duration-500 hover:scale-[1.02] shadow-sm hover:shadow-xl"
             >
               <video 
@@ -550,9 +596,9 @@ export default function App() {
                   ))}
                 </div>
               </div>
-            </a>
+            </motion.a>
           ))}
-        </div>
+        </motion.div>
 
         <div className="mt-12 sm:mt-16 w-full flex items-center justify-center gap-6">
           <button className="text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest font-light text-zinc-400 hover:text-white transition-opacity duration-300">
@@ -573,16 +619,22 @@ export default function App() {
           style={{ perspective: "1500px" }}
         >
           <motion.div 
-            style={{ opacity: sec3TextOpacity }}
+            variants={blurFadeIn}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
             className="absolute top-16 sm:top-20 md:top-24 left-0 right-0 z-30 text-center px-4 w-full pointer-events-none"
           >
-             <h2 
+             <motion.h2 
+              style={{ 
+                opacity: sec3TextOpacity,
+                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" 
+              }}
               className="text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white tracking-widest uppercase font-normal drop-shadow-md leading-[1.6] md:leading-[1.8]" 
-              style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
              >
                {t.sec3Title1} <br />
                {t.sec3Title2} <span className="font-bold">{t.sec3Title3}</span>
-             </h2>
+             </motion.h2>
           </motion.div>
 
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
@@ -633,15 +685,25 @@ export default function App() {
 
       {/* DOBRA 4 - SERVIÇOS */}
       <section id="servicos" className="relative z-[150] w-full min-h-screen bg-white flex flex-col items-start justify-center text-zinc-900 pt-24 pb-12 px-4 sm:px-[20px] md:px-10">
-        <h2 
+        <motion.h2 
+          variants={blurFadeIn}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
           className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-[0.2em] uppercase font-bold text-left mb-8 sm:mb-12"
           style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
         >
           {t.sec4Title}
-        </h2>
-        <div className="w-full">
+        </motion.h2>
+        <motion.div 
+          variants={blurFadeIn}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="w-full"
+        >
           <ServicesAccordion data={t.servicesData} />
-        </div>
+        </motion.div>
         <div className="w-full mt-12 sm:mt-16 md:mt-24 flex justify-center">
           <h3 
             className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold tracking-widest text-center uppercase max-w-5xl leading-snug text-black"
@@ -654,10 +716,17 @@ export default function App() {
 
       {/* DOBRA 5 - BIO */}
       <section id="bio" className="relative z-[150] w-full bg-white flex flex-col items-center justify-start text-zinc-900 pt-8 pb-24 px-4 sm:px-[20px] md:px-10">
-        <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16">
+        <motion.div 
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16"
+        >
           {t.stats.map((stat, i) => (
-            <div 
+            <motion.div 
               key={i} 
+              variants={blurFadeIn}
               className="border border-black bg-transparent rounded-[10px] p-6 sm:p-8 md:p-12 flex flex-col justify-center items-start hover:bg-zinc-50 transition-colors duration-300"
             >
               <h2 
@@ -669,11 +738,17 @@ export default function App() {
               <p className="text-[10px] sm:text-xs md:text-sm text-zinc-500 uppercase tracking-widest font-semibold">
                 {stat.label}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="w-full max-w-7xl border border-black rounded-[10px] flex flex-col lg:flex-row overflow-hidden bg-transparent">
+        <motion.div 
+          variants={blurFadeIn}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true }}
+          className="w-full max-w-7xl border border-black rounded-[10px] flex flex-col lg:flex-row overflow-hidden bg-transparent"
+        >
           <div className="relative w-full lg:w-[45%] h-[350px] sm:h-[450px] md:h-[500px] lg:h-auto border-b lg:border-b-0 lg:border-r border-black">
             <img 
               src="https://raw.githubusercontent.com/legendragon03453-dot/FILIPPO-SITE/main/project.webp" 
@@ -723,13 +798,17 @@ export default function App() {
               </motion.div>
             </button>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* DOBRA 6 - FOOTER */}
       <footer id="orcamento" className="relative z-[200] w-full bg-black text-white flex flex-col items-center justify-center pt-24 sm:pt-32 pb-12 px-4 sm:px-[20px] md:px-10">
         <div className="flex flex-col items-center text-center max-w-6xl mx-auto mb-16 sm:mb-24 md:mb-32">
-          <h2 
+          <motion.h2 
+            variants={blurFadeIn}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
             className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-snug mb-8 sm:mb-10 md:mb-14"
             style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
           >
@@ -743,10 +822,17 @@ export default function App() {
                 {t.sec6Title3}
               </span>
             </span>
-          </h2>
-          <button className="shiny-btn">
-            <span>{t.sec6Btn}</span>
-          </button>
+          </motion.h2>
+          <motion.div
+            variants={scaleIn}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
+          >
+            <button className="shiny-btn">
+              <span>{t.sec6Btn}</span>
+            </button>
+          </motion.div>
         </div>
 
         <div className="w-full max-w-7xl flex flex-col md:flex-row items-center justify-between border-t border-white/20 pt-8 gap-6 md:gap-0">
